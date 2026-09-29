@@ -197,6 +197,7 @@ def make_ip_record(
     version: int,
     classification: str,
     sources: Optional[List[str]] = None,
+    reason: Optional[str] = None,
 ) -> Dict[str, Any]:
     if classification not in IP_CLASSES:
         raise ValueError(f"Invalid IP classification: {classification!r}")
@@ -206,7 +207,8 @@ def make_ip_record(
         "ip": ip,
         "version": version,
         "classification": classification,
-        "sources": sources or [],   # e.g. ["received[2]", "header:X-Originating-IP"]
+        "reason": reason,            # why it got that class, e.g. "RFC 1918 private range"
+        "sources": sources or [],    # e.g. ["received[2]:from", "header:X-Originating-IP"]
     }
 
 
