@@ -110,6 +110,12 @@ def empty_result() -> Dict[str, Any]:
                 "mime_version": None,
                 "parts": [],       # one summary dict per MIME part
             },
+                        "routing": {
+                "hop_count": 0,
+                "originating_host": None,       # earliest recorded sending host (as claimed)
+                "originating_ip": None,
+                "final_receiving_host": None,   # "by" host of the topmost Received header
+            },
             "meta": {
                 "schema_version": SCHEMA_VERSION,
                 "file_name": None,
