@@ -1,0 +1,16 @@
+Received: from mail.example.org (mail.example.org [203.0.113.10])
+	by mx.example.com with ESMTP id abc123
+	for <bob@example.com>; Mon, 05 Jan 2026 10:15:02 +0000
+Return-Path: <alice@example.org>
+From: "Alice Sender" <Alice@Example.org>
+To: Bob Recipient <bob@example.com>, carol@example.com
+Cc: dave@example.com
+Reply-To: support@example.net
+Subject: Test message
+Date: Mon, 05 Jan 2026 10:15:00 +0000
+Message-ID: <basic-001@example.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+
+Hello Bob, this is a plain text test message.
+Visit http://example.org/page for details.
