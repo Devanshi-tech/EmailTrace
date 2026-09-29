@@ -1,0 +1,15 @@
+Authentication-Results: mx.example.com;
+	spf=pass (example.org: domain of alice@example.org designates 203.0.113.10 as permitted sender) smtp.mailfrom=alice@example.org;
+	dkim=pass header.d=example.org header.s=sel1;
+	dmarc=pass (p=REJECT) header.from=example.org
+Received-SPF: pass (mx.example.com: domain of alice@example.org designates 203.0.113.10 as permitted sender) client-ip=203.0.113.10;
+From: Alice Sender <alice@example.org>
+To: bob@example.com
+Subject: Authenticated message
+Date: Mon, 05 Jan 2026 10:15:00 +0000
+Message-ID: <auth-pass-001@example.org>
+MIME-Version: 1.0
+X-Mailer: PHPMailer 6.5.0
+Content-Type: text/plain; charset="utf-8"
+
+Simulated message with passing authentication.

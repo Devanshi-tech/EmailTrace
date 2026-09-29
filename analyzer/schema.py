@@ -92,9 +92,16 @@ def empty_result() -> Dict[str, Any]:
             "user_agent": None,
             "authentication": {
                 "authentication_results_raw": [],
+                "received_spf_raw": None,
                 "spf": None,       # e.g. "pass", "fail", or None if absent
-                "dkim": None,
+                "dkim": None,      # "pass" if any signature passed
                 "dmarc": None,
+                "details": {
+                    "authserv_id": None,              # server that wrote the topmost result
+                    "spf_mailfrom_domain": None,      # smtp.mailfrom / envelope-from domain
+                    "dkim_results": [],               # [{"result": ..., "domain": ...}]
+                    "dmarc_header_from_domain": None,
+                },
             },
             "mime": {
                 "is_multipart": False,
