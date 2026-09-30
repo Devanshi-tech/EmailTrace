@@ -270,13 +270,19 @@ def make_attachment_record(
     size_bytes: int,
     sha256: str,
     content_disposition: Optional[str] = None,
+    extension: Optional[str] = None,
+    detected_type: Optional[str] = None,
+    flags: Optional[List[str]] = None,
 ) -> Dict[str, Any]:
     return {
-        "filename": filename,
-        "mime_type": mime_type,
+        "filename": filename,                       # raw name; escape before display
+        "mime_type": mime_type,                     # as declared in Content-Type
         "size_bytes": size_bytes,
         "sha256": sha256,
         "content_disposition": content_disposition,
+        "extension": extension,                     # last extension, lowercase
+        "detected_type": detected_type,             # from leading bytes, or None
+        "flags": flags or [],
     }
 
 
