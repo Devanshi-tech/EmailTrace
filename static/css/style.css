@@ -212,3 +212,34 @@ h1, h2, h3, h4, h5 { color: var(--et-text); font-weight: 600; }
     color: var(--et-accent);
     font-weight: 700;
 }
+
+/* ==========================================================
+   Step 3 additions: upload page
+   ========================================================== */
+
+.et-file-info {
+    background: var(--et-surface-2);
+    border: 1px solid var(--et-border);
+    border-left: 4px solid var(--et-accent);
+    border-radius: 8px;
+    padding: 0.9rem 1rem;
+}
+
+/* File input styling to match the dark theme */
+.form-control[type="file"] {
+    background-color: var(--et-surface-2);
+    border-color: var(--et-border);
+    color: var(--et-text);
+}
+.form-control[type="file"]:focus {
+    border-color: var(--et-accent);
+    box-shadow: 0 0 0 0.2rem var(--et-accent-dim);
+}
+
+/* Disabled primary button should look clearly inactive */
+.et-btn-primary:disabled {
+    background-color: var(--et-surface-2);
+    border-color: var(--et-border);
+    color: var(--et-muted);
+    opacity: 1;
+}
