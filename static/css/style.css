@@ -384,3 +384,17 @@ h1, h2, h3, h4, h5 { color: var(--et-text); font-weight: 600; }
     color: var(--et-muted);
     padding: 0.35rem 0;
 }
+
+/* ==========================================================
+   Step 6 additions: analysis page charts
+   ========================================================== */
+
+/* Chart.js needs a container with a fixed height when maintainAspectRatio is false */
+.et-chart-box {
+    position: relative;
+    height: 280px;
+}
+
+@media (max-width: 575.98px) {
+    .et-chart-box { height: 240px; }
+}
