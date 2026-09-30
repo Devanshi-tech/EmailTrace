@@ -1,0 +1,142 @@
+/* ==========================================================
+   EmailTrace - Design System
+   Dark, clean, professional forensic-dashboard theme
+   ========================================================== */
+
+:root {
+    --et-bg:            #0d1117;
+    --et-surface:       #161b22;
+    --et-surface-2:     #1c232d;
+    --et-border:        #2a323d;
+    --et-text:          #e6edf3;
+    --et-muted:         #8b98a5;
+    --et-accent:        #3fb6c9;   /* calm teal, not flashy */
+    --et-accent-dim:    rgba(63, 182, 201, 0.12);
+
+    /* Severity colors */
+    --sev-info:         #6c8ebf;
+    --sev-low:          #3fa672;
+    --sev-medium:       #d4a017;
+    --sev-high:         #d9534f;
+}
+
+/* ---------- Base ---------- */
+body {
+    background-color: var(--et-bg);
+    color: var(--et-text);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+h1, h2, h3, h4, h5 { color: var(--et-text); font-weight: 600; }
+.et-accent { color: var(--et-accent); }
+.text-secondary { color: var(--et-muted) !important; }
+
+/* ---------- Navbar ---------- */
+.et-navbar {
+    background-color: var(--et-surface);
+    border-bottom: 1px solid var(--et-border);
+}
+.et-brand { font-weight: 700; letter-spacing: 0.3px; }
+.et-brand-mark { color: var(--et-accent); margin-right: 4px; }
+.et-navbar .nav-link { color: var(--et-muted); font-size: 0.95rem; }
+.et-navbar .nav-link:hover { color: var(--et-text); }
+.et-navbar .nav-link.active {
+    color: var(--et-accent);
+    border-bottom: 2px solid var(--et-accent);
+}
+
+/* ---------- Footer ---------- */
+.et-footer {
+    background-color: var(--et-surface);
+    border-top: 1px solid var(--et-border);
+}
+.et-safe-note { color: var(--sev-medium); }
+
+/* ---------- Cards ---------- */
+.et-card {
+    background-color: var(--et-surface);
+    border: 1px solid var(--et-border);
+    border-radius: 10px;
+    padding: 1.25rem;
+    height: 100%;
+}
+.et-card-title {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--et-muted);
+    margin-bottom: 0.5rem;
+}
+.et-stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--et-accent);
+    line-height: 1.1;
+}
+
+/* ---------- Section headings ---------- */
+.et-section-title {
+    font-size: 1.15rem;
+    padding-bottom: 0.5rem;
+    margin: 2rem 0 1rem;
+    border-bottom: 1px solid var(--et-border);
+}
+
+/* ---------- Tables ---------- */
+.et-table {
+    --bs-table-bg: var(--et-surface);
+    --bs-table-border-color: var(--et-border);
+    --bs-table-striped-bg: var(--et-surface-2);
+    color: var(--et-text);
+    margin-bottom: 0;
+}
+.et-table thead th {
+    background-color: var(--et-surface-2);
+    color: var(--et-muted);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    border-bottom: 1px solid var(--et-border);
+}
+
+/* Untrusted data (URLs, hashes, IPs): plain monospace text, never links */
+.et-mono {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.85rem;
+    word-break: break-all;
+}
+
+/* ---------- Severity badges ---------- */
+.et-badge {
+    display: inline-block;
+    padding: 0.25em 0.6em;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border: 1px solid transparent;
+}
+.et-badge-info   { color: var(--sev-info);   background: rgba(108,142,191,.15); border-color: var(--sev-info); }
+.et-badge-low    { color: var(--sev-low);    background: rgba(63,166,114,.15);  border-color: var(--sev-low); }
+.et-badge-medium { color: var(--sev-medium); background: rgba(212,160,23,.15);  border-color: var(--sev-medium); }
+.et-badge-high   { color: var(--sev-high);   background: rgba(217,83,79,.15);   border-color: var(--sev-high); }
+
+/* ---------- Hero (home page) ---------- */
+.et-hero { padding: 3rem 0 2rem; text-align: center; }
+.et-hero h1 { font-size: clamp(2rem, 5vw, 3rem); }
+.et-hero p  { color: var(--et-muted); font-size: 1.1rem; }
+
+/* ---------- Placeholder blocks (used in Step 1 only) ---------- */
+.et-placeholder {
+    border: 1px dashed var(--et-border);
+    border-radius: 10px;
+    padding: 2rem;
+    text-align: center;
+    color: var(--et-muted);
+    background: var(--et-accent-dim);
+}
+
+/* ---------- Print (used by report page later) ---------- */
+@media print {
+    .et-navbar, .et-footer, .no-print { display: none !important; }
+    body { background: #fff; color: #000; }
+}

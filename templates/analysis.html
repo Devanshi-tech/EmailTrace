@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Analysis{% endblock %}
+
+{% block content %}
+<h2>Analysis</h2>
+<p class="text-secondary">
+    Investigation ID:
+    <span class="et-mono">{{ investigation_id if investigation_id else "none selected" }}</span>
+</p>
+<div class="et-placeholder">Analysis view will be built in Steps 6-7.</div>
+{% endblock %}
