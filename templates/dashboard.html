@@ -130,11 +130,73 @@
         <p id="riskBreakdown" class="text-secondary small"></p>
         <div id="riskList"></div>
 
-        <!-- Detailed sections come in Step 5 -->
-        <div class="et-placeholder mt-4">
-            Detailed sections (headers, received path, timeline, IPs, URLs, domains,
-            attachments, content analysis, IOCs) will be added in Step 5.
-        </div>
+        <!-- ===== JUMP LINKS ===== -->
+        <nav class="et-jumpnav mt-4" aria-label="Jump to section">
+            <a href="#sec-headers">Headers</a>
+            <a href="#sec-received">Received Path</a>
+            <a href="#sec-timeline">Timeline</a>
+            <a href="#sec-ips">IPs</a>
+            <a href="#sec-urls">URLs</a>
+            <a href="#sec-domains">Domains</a>
+            <a href="#sec-attachments">Attachments</a>
+            <a href="#sec-content">Content</a>
+            <a href="#sec-iocs">IOCs</a>
+        </nav>
+
+        <!-- ===== HEADER INVESTIGATION ===== -->
+        <h3 class="et-section-title" id="sec-headers">
+            Header Investigation <span class="et-count" id="cntHeaders">0</span>
+        </h3>
+        <div id="tblHeaders"></div>
+
+        <!-- ===== RECEIVED PATH ===== -->
+        <h3 class="et-section-title" id="sec-received">Received Path</h3>
+        <div id="receivedPath"></div>
+
+        <!-- ===== TIMELINE ===== -->
+        <h3 class="et-section-title" id="sec-timeline">
+            Timeline <span class="et-count" id="cntTimeline">0</span>
+        </h3>
+        <div id="tblTimeline"></div>
+
+        <!-- ===== IP ANALYSIS ===== -->
+        <h3 class="et-section-title" id="sec-ips">
+            IP Analysis <span class="et-count" id="cntIps">0</span>
+        </h3>
+        <div id="tblIps"></div>
+
+        <!-- ===== URL INVESTIGATION ===== -->
+        <h3 class="et-section-title" id="sec-urls">
+            URL Investigation <span class="et-count" id="cntUrls">0</span>
+        </h3>
+        <p class="et-url-note">
+            Extracted URLs are untrusted. They are displayed as text only and are not clickable.
+        </p>
+        <div id="tblUrls"></div>
+
+        <!-- ===== DOMAIN ANALYSIS ===== -->
+        <h3 class="et-section-title" id="sec-domains">
+            Domain Analysis <span class="et-count" id="cntDomains">0</span>
+        </h3>
+        <div id="tblDomains"></div>
+
+        <!-- ===== ATTACHMENTS ===== -->
+        <h3 class="et-section-title" id="sec-attachments">
+            Attachment Analysis <span class="et-count" id="cntAttachments">0</span>
+        </h3>
+        <div id="tblAttachments"></div>
+
+        <!-- ===== CONTENT ANALYSIS ===== -->
+        <h3 class="et-section-title" id="sec-content">
+            Content Analysis <span class="et-count" id="cntContent">0</span>
+        </h3>
+        <div id="tblContent"></div>
+
+        <!-- ===== IOC DETECTION ===== -->
+        <h3 class="et-section-title" id="sec-iocs">
+            IOC Detection <span class="et-count" id="cntIocs">0</span>
+        </h3>
+        <div id="tblIocs"></div>
 
     </div>
 </div>

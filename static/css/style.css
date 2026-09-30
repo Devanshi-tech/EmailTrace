@@ -283,3 +283,104 @@ h1, h2, h3, h4, h5 { color: var(--et-text); font-weight: 600; }
 @media (max-width: 575.98px) {
     .et-stat-value { font-size: 1.6rem; }
 }
+
+/* ==========================================================
+   Step 5 additions: detailed dashboard sections
+   ========================================================== */
+
+/* Section titles: offset for sticky navbar when using jump links */
+.et-section-title { scroll-margin-top: 80px; }
+
+/* Item count next to a section title */
+.et-count {
+    display: inline-block;
+    margin-left: 0.4rem;
+    padding: 0.1em 0.55em;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--et-accent);
+    background: var(--et-accent-dim);
+    border-radius: 999px;
+    vertical-align: middle;
+}
+
+/* Jump links */
+.et-jumpnav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+.et-jumpnav a {
+    padding: 0.3rem 0.75rem;
+    font-size: 0.8rem;
+    color: var(--et-muted);
+    background: var(--et-surface);
+    border: 1px solid var(--et-border);
+    border-radius: 999px;
+    text-decoration: none;
+}
+.et-jumpnav a:hover { color: var(--et-accent); border-color: var(--et-accent); }
+
+/* Table wrapper */
+.et-table-wrap {
+    border: 1px solid var(--et-border);
+    border-radius: 10px;
+}
+.et-table td, .et-table th { padding: 0.65rem 0.85rem; vertical-align: middle; }
+
+/* Indicator tags (neutral, not a verdict) */
+.et-tag {
+    display: inline-block;
+    padding: 0.15em 0.55em;
+    font-size: 0.75rem;
+    color: var(--et-text);
+    background: var(--et-surface-2);
+    border: 1px solid var(--et-border);
+    border-radius: 6px;
+}
+
+/* Note above the URL table */
+.et-url-note {
+    font-size: 0.85rem;
+    color: var(--sev-medium);
+    margin-bottom: 0.75rem;
+}
+
+/* Received path chain */
+.et-hop-chain {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.et-hop {
+    width: 100%;
+    max-width: 560px;
+    background: var(--et-surface);
+    border: 1px solid var(--et-border);
+    border-left: 4px solid var(--et-accent);
+    border-radius: 10px;
+    padding: 0.9rem 1.1rem;
+}
+.et-hop-end { border-left-color: var(--sev-low); }
+.et-hop-label {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--et-accent);
+    margin-bottom: 0.15rem;
+}
+.et-hop-end .et-hop-label { color: var(--sev-low); }
+.et-hop-title { font-size: 1rem; margin-bottom: 0.4rem; }
+.et-hop-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+}
+.et-hop-key { min-width: 100px; color: var(--et-muted); }
+.et-hop-arrow {
+    font-size: 1.4rem;
+    line-height: 1;
+    color: var(--et-muted);
+    padding: 0.35rem 0;
+}

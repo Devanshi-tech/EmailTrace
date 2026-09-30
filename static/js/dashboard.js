@@ -3,6 +3,8 @@
    Talks to: GET /api/investigation/<investigation_id>
    Security: all API data is untrusted. It is written with
    textContent / createElement only (never innerHTML).
+   URLs are shown as plain text; no <a> elements are created
+   from extracted data.
    ========================================================== */
 (function () {
     "use strict";
@@ -59,6 +61,15 @@
         return Array.isArray(value) ? value : [];
     }
 
+    function formatSize(bytes) {
+        if (typeof bytes !== "number" || !isFinite(bytes) || bytes < 0) {
+            return bytes; // let text() handle strings / missing values
+        }
+        if (bytes < 1024) return bytes + " B";
+        if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
+        return (bytes / (1024 * 1024)).toFixed(2) + " MB";
+    }
+
     async function readJson(response) {
         try {
             return await response.json();
@@ -74,8 +85,8 @@
     }
 
     /* ----------------------------------------------------------
-       normalize(): the ONLY place that knows the API field names.
-       If the backend uses different names, edit this function.
+       normalize(): the ONLY place that knows the top-level API
+       field names. If the backend uses different names, edit here.
        ---------------------------------------------------------- */
     function normalize(payload) {
         const d = (payload && payload.investigation) ? payload.investigation : (payload || {});
@@ -90,17 +101,292 @@
                 replyTo: email.reply_to,
                 returnPath: email.return_path
             },
+            headers: asList(d.headers),
+            receivedPath: asList(d.received_path),
+            timeline: asList(d.timeline),
             urls: asList(d.urls),
             ips: asList(d.ips),
             domains: asList(d.domains),
             attachments: asList(d.attachments),
+            contentFindings: asList(d.content_findings),
             iocs: asList(d.iocs),
-            risks: asList(d.risk_indicators),
-            raw: d // full payload, used by the detailed sections in Step 5
+            risks: asList(d.risk_indicators)
         };
     }
 
-    // ---------- Rendering ----------
+    // ==========================================================
+    // Safe table builder
+    // ==========================================================
+
+    // A list of indicator strings shown as neutral tags
+    function makeTags(value) {
+        const items = Array.isArray(value) ? value : (value ? [value] : []);
+        const wrap = document.createElement("div");
+        if (items.length === 0) {
+            const none = document.createElement("span");
+            none.className = "text-secondary small";
+            none.textContent = "None detected";
+            wrap.appendChild(none);
+            return wrap;
+        }
+        wrap.className = "d-flex flex-wrap gap-1";
+        items.forEach(function (item) {
+            const tag = document.createElement("span");
+            tag.className = "et-tag";
+            tag.textContent = String(item);
+            wrap.appendChild(tag);
+        });
+        return wrap;
+    }
+
+    // Build the content of one table cell from a column definition
+    function cellContent(col, row) {
+        const v = col.value(row);
+        if (col.type === "severity") return makeBadge(v);
+        if (col.type === "tags") return makeTags(v);
+
+        let el;
+        if (col.type === "bold") {
+            el = document.createElement("strong");
+        } else {
+            el = document.createElement("span");
+            if (col.type === "mono") el.className = "et-mono";
+        }
+        el.textContent = text(v); // safe: textContent
+        return el;
+    }
+
+    function emptyBox(message) {
+        const box = document.createElement("div");
+        box.className = "et-placeholder";
+        box.textContent = message;
+        return box;
+    }
+
+    function buildTable(container, columns, rows, emptyMessage) {
+        container.replaceChildren();
+        if (rows.length === 0) {
+            container.appendChild(emptyBox(emptyMessage));
+            return;
+        }
+
+        const wrap = document.createElement("div");
+        wrap.className = "table-responsive et-table-wrap";
+
+        const table = document.createElement("table");
+        table.className = "table table-striped table-hover align-middle et-table";
+
+        const thead = document.createElement("thead");
+        const headRow = document.createElement("tr");
+        columns.forEach(function (col) {
+            const th = document.createElement("th");
+            th.scope = "col";
+            th.textContent = col.label;
+            headRow.appendChild(th);
+        });
+        thead.appendChild(headRow);
+        table.appendChild(thead);
+
+        const tbody = document.createElement("tbody");
+        rows.forEach(function (row) {
+            const tr = document.createElement("tr");
+            columns.forEach(function (col) {
+                const td = document.createElement("td");
+                td.appendChild(cellContent(col, row));
+                tr.appendChild(td);
+            });
+            tbody.appendChild(tr);
+        });
+        table.appendChild(tbody);
+
+        wrap.appendChild(table);
+        container.appendChild(wrap);
+    }
+
+    // ==========================================================
+    // Section definitions (one table per section)
+    // ==========================================================
+    const SECTIONS = [
+        {
+            key: "headers", table: "tblHeaders", count: "cntHeaders",
+            empty: "No headers were extracted.",
+            columns: [
+                { label: "Header", type: "bold", value: function (r) { return r.name; } },
+                { label: "Value", type: "mono", value: function (r) { return r.value; } }
+            ]
+        },
+        {
+            key: "timeline", table: "tblTimeline", count: "cntTimeline",
+            empty: "No timeline events were extracted.",
+            columns: [
+                { label: "Timestamp", type: "mono", value: function (r) { return r.timestamp; } },
+                { label: "Event", value: function (r) { return r.event; } },
+                { label: "Source", value: function (r) { return r.source; } }
+            ]
+        },
+        {
+            key: "ips", table: "tblIps", count: "cntIps",
+            empty: "No IP addresses were extracted.",
+            columns: [
+                { label: "IP", type: "mono", value: function (r) { return r.ip; } },
+                { label: "Type", value: function (r) { return r.type; } },
+                { label: "Source", value: function (r) { return r.source; } },
+                { label: "Classification", value: function (r) { return r.classification; } }
+            ]
+        },
+        {
+            key: "urls", table: "tblUrls", count: "cntUrls",
+            empty: "No URLs were extracted.",
+            columns: [
+                { label: "URL", type: "mono", value: function (r) { return r.url; } },
+                { label: "Hostname", type: "mono", value: function (r) { return r.hostname; } },
+                { label: "Indicators", type: "tags", value: function (r) { return r.indicators; } }
+            ]
+        },
+        {
+            key: "domains", table: "tblDomains", count: "cntDomains",
+            empty: "No domains were extracted.",
+            columns: [
+                { label: "Domain", type: "mono", value: function (r) { return r.domain; } },
+                { label: "Source", value: function (r) { return r.source; } },
+                { label: "Suspicious Indicators", type: "tags", value: function (r) { return r.indicators; } }
+            ]
+        },
+        {
+            key: "attachments", table: "tblAttachments", count: "cntAttachments",
+            empty: "This email has no attachments.",
+            columns: [
+                { label: "Filename", type: "mono", value: function (r) { return r.filename; } },
+                { label: "MIME Type", type: "mono", value: function (r) { return r.mime_type; } },
+                { label: "Size", value: function (r) { return formatSize(r.size); } },
+                { label: "SHA-256", type: "mono", value: function (r) { return r.sha256; } }
+            ]
+        },
+        {
+            key: "contentFindings", table: "tblContent", count: "cntContent",
+            empty: "No content indicators were detected.",
+            prepare: function (rows) {   // highest severity first
+                return rows.slice().sort(function (a, b) {
+                    return SEVERITY_RANK[normalizeSeverity(b.severity)] -
+                           SEVERITY_RANK[normalizeSeverity(a.severity)];
+                });
+            },
+            columns: [
+                { label: "Detected Indicator", value: function (r) { return r.indicator; } },
+                { label: "Evidence", value: function (r) { return r.evidence; } },
+                { label: "Severity", type: "severity", value: function (r) { return r.severity; } }
+            ]
+        },
+        {
+            key: "iocs", table: "tblIocs", count: "cntIocs",
+            empty: "No indicators of compromise were detected.",
+            columns: [
+                { label: "Type", type: "bold", value: function (r) { return r.type; } },
+                { label: "Value", type: "mono", value: function (r) { return r.value; } },
+                { label: "Source", value: function (r) { return r.source; } }
+            ]
+        }
+    ];
+
+    function renderSections(data) {
+        SECTIONS.forEach(function (section) {
+            const rows = section.prepare ? section.prepare(data[section.key]) : data[section.key];
+            buildTable(document.getElementById(section.table), section.columns, rows, section.empty);
+            document.getElementById(section.count).textContent = rows.length;
+        });
+    }
+
+    // ==========================================================
+    // Received path: Server A -> Server B -> Server C -> Recipient
+    // ==========================================================
+    function serverLabel(index) {
+        return index < 26 ? "Server " + String.fromCharCode(65 + index) : "Server " + (index + 1);
+    }
+
+    function hopRow(label, value) {
+        const row = document.createElement("div");
+        row.className = "et-hop-row";
+
+        const l = document.createElement("span");
+        l.className = "et-hop-key";
+        l.textContent = label;
+
+        const v = document.createElement("span");
+        v.className = "et-mono";
+        v.textContent = text(value);
+
+        row.appendChild(l);
+        row.appendChild(v);
+        return row;
+    }
+
+    function makeArrow() {
+        const arrow = document.createElement("div");
+        arrow.className = "et-hop-arrow";
+        arrow.setAttribute("aria-hidden", "true");
+        arrow.textContent = "\u2193"; // down arrow
+        return arrow;
+    }
+
+    function renderReceivedPath(hops, recipient) {
+        const container = document.getElementById("receivedPath");
+        container.replaceChildren();
+
+        if (hops.length === 0) {
+            container.appendChild(emptyBox("No Received headers were found, so the delivery path is unavailable."));
+            return;
+        }
+
+        // Order by hop number if the backend provides it (stable sort keeps original order otherwise)
+        const ordered = hops.slice().sort(function (a, b) {
+            return (Number(a.hop) || 0) - (Number(b.hop) || 0);
+        });
+
+        const chain = document.createElement("div");
+        chain.className = "et-hop-chain";
+
+        ordered.forEach(function (hop, i) {
+            const node = document.createElement("div");
+            node.className = "et-hop";
+
+            const label = document.createElement("div");
+            label.className = "et-hop-label";
+            label.textContent = serverLabel(i);
+            node.appendChild(label);
+
+            const name = document.createElement("div");
+            name.className = "et-hop-title et-mono";
+            name.textContent = text(hop.by);
+            node.appendChild(name);
+
+            node.appendChild(hopRow("Received from", hop.from ?? hop.from_host));
+            node.appendChild(hopRow("IP", hop.ip));
+            node.appendChild(hopRow("Time", hop.timestamp));
+
+            chain.appendChild(node);
+            chain.appendChild(makeArrow());
+        });
+
+        const end = document.createElement("div");
+        end.className = "et-hop et-hop-end";
+
+        const endLabel = document.createElement("div");
+        endLabel.className = "et-hop-label";
+        endLabel.textContent = "Recipient";
+        end.appendChild(endLabel);
+
+        const endName = document.createElement("div");
+        endName.className = "et-hop-title et-mono";
+        endName.textContent = text(recipient);
+        end.appendChild(endName);
+
+        chain.appendChild(end);
+        container.appendChild(chain);
+    }
+
+    // ==========================================================
+    // Email details, summary cards, risk indicators (Step 4)
+    // ==========================================================
     function renderEmailDetails(data) {
         setText("dId", data.id);
         setText("dSender", data.email.sender);
@@ -125,21 +411,16 @@
 
         if (risks.length === 0) {
             riskBreakdown.textContent = "None reported.";
-            const empty = document.createElement("div");
-            empty.className = "et-placeholder";
-            empty.textContent = "No risk indicators were reported for this investigation.";
-            riskList.appendChild(empty);
+            riskList.appendChild(emptyBox("No risk indicators were reported for this investigation."));
             return;
         }
 
-        // Breakdown line, e.g. "High: 1 | Medium: 2 | Low: 0 | Informational: 1"
         const counts = { high: 0, medium: 0, low: 0, info: 0 };
         risks.forEach(function (r) { counts[normalizeSeverity(r.severity)] += 1; });
         riskBreakdown.textContent =
             "High: " + counts.high + "  |  Medium: " + counts.medium +
             "  |  Low: " + counts.low + "  |  Informational: " + counts.info;
 
-        // Highest severity first
         const sorted = risks.slice().sort(function (a, b) {
             return SEVERITY_RANK[normalizeSeverity(b.severity)] -
                    SEVERITY_RANK[normalizeSeverity(a.severity)];
@@ -171,9 +452,13 @@
         renderEmailDetails(data);
         renderCards(data);
         renderRisks(data.risks);
+        renderReceivedPath(data.receivedPath, data.email.recipient);
+        renderSections(data);
 
-        const totalItems = data.urls.length + data.ips.length + data.domains.length +
-                           data.attachments.length + data.iocs.length + data.risks.length;
+        const totalItems = data.headers.length + data.receivedPath.length + data.timeline.length +
+                           data.urls.length + data.ips.length + data.domains.length +
+                           data.attachments.length + data.contentFindings.length +
+                           data.iocs.length + data.risks.length;
         noEvidenceNote.classList.toggle("d-none", totalItems > 0);
     }
 
