@@ -1,0 +1,30 @@
+From: Alice Sender <alice@example.org>
+To: bob@example.com
+Subject: URL extraction test
+Date: Mon, 05 Jan 2026 10:00:00 +0000
+Message-ID: <urls-001@example.org>
+MIME-Version: 1.0
+Content-Type: multipart/alternative; boundary="alt"
+
+--alt
+Content-Type: text/plain; charset="utf-8"
+
+Plain text links:
+Visit https://portal.example.org/login?user=bob&next=%2Fhome for your account.
+Short link: http://bit.ly/3AbCdE.
+IP link: http://203.0.113.9:8080/verify/index.php
+Bare address: www.example.net/offers.
+--alt
+Content-Type: text/html; charset="utf-8"
+
+<html><body>
+<p><a href="https://portal.example.org/login?user=bob&amp;next=%2Fhome">https://portal.example.org/login</a></p>
+<p><a href="http://evil.example.tk/collect">https://www.example-bank.example/secure</a></p>
+<p><a href="http://paypal.example.com@198.51.100.7/signin">Sign in</a></p>
+<p><a href="http://3232235777/pay">Pay now</a></p>
+<p><a href="javascript:void(0)">Click</a></p>
+<p><a href="mailto:support@example.org">Mail us</a></p>
+<img src="data:image/png;base64,iVBORw0KGgo=">
+<img src="https://cdn.example.org/pixel.gif">
+</body></html>
+--alt--

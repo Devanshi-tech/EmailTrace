@@ -16,6 +16,7 @@ from .header_analyzer import analyze_headers
 from .ip_analyzer import analyze_ips
 from .received_analyzer import analyze_received_path, analyze_timestamps
 from .schema import SCHEMA_VERSION, empty_result, validate_result
+from .url_analyzer import analyze_urls
 
 __all__ = ["analyze_email", "SCHEMA_VERSION", "validate_result"]
 
@@ -24,8 +25,8 @@ def analyze_email(file_path: str) -> Dict[str, Any]:
     """
     Analyze a simulated or authorized .eml file and return the result dict.
 
-    Step 5: parsing, authentication/header analysis, Received path,
-    timestamps and IP analysis. Later steps add URLs, domains, attachments,
+    Step 6: parsing, authentication/header analysis, Received path,
+    timestamps, IPs and URLs. Later steps add domains, attachments,
     content and IOCs.
     """
     parsed = parse_email(file_path)
@@ -35,4 +36,5 @@ def analyze_email(file_path: str) -> Dict[str, Any]:
     analyze_received_path(parsed, result)
     analyze_timestamps(parsed, result)
     analyze_ips(parsed, result)
+    analyze_urls(parsed, result)
     return result

@@ -236,17 +236,22 @@ def make_url_record(
     query: Optional[str],
     source: str,
     flags: Optional[List[str]] = None,
+    sources: Optional[List[str]] = None,
+    contexts: Optional[List[str]] = None,
+    link_text: Optional[str] = None,
 ) -> Dict[str, Any]:
     return {
         "url": url,
-        "scheme": scheme,
-        "hostname": hostname,
+        "scheme": scheme,            # None for bare "www." and "//host" URLs
+        "hostname": hostname,        # lowercase, no port or credentials
         "path": path,
         "query": query,
-        "source": source,            # "text/plain" or "text/html"
+        "source": source,            # first place seen: "text/plain" or "text/html"
+        "sources": sources or [source],
+        "contexts": contexts or [],  # e.g. "text", "a[href]", "img[src]"
+        "link_text": link_text,      # visible text of the first <a> using this URL
         "flags": flags or [],        # e.g. ["ip_based", "url_shortener"]
     }
-
 
 def make_domain_record(domain: str, sources: Optional[List[str]] = None) -> Dict[str, Any]:
     return {
