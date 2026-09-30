@@ -1,0 +1,15 @@
+From: Alice Sender <alice@example.org>
+To: bob@example.com
+Subject: Meeting notes for Tuesday
+Date: Mon, 05 Jan 2026 13:30:00 +0000
+Message-ID: <content-002@example.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+
+Hi Bob,
+
+Here are the notes from Tuesday's meeting. Let me know if you have any
+questions, and we can go through them on Thursday.
+
+Thanks,
+Alice

@@ -291,13 +291,15 @@ def make_content_match(
     category: str,
     matched_text: str,
     location: str,
+    context: Optional[str] = None,
 ) -> Dict[str, Any]:
-    """One transparent keyword/pattern rule hit in the subject or body."""
+    """One transparent rule hit in the subject or body."""
     return {
-        "rule": rule,                # human-readable rule name
+        "rule": rule,                # readable rule name, e.g. "verify_account_request"
         "category": category,        # e.g. "urgency", "credential_request"
         "matched_text": matched_text,
-        "location": location,        # "subject", "body_plain", "body_html"
+        "location": location,        # "subject", "body_plain" or "body_html"
+        "context": context,          # surrounding text, URLs shown as [link]
     }
 
 

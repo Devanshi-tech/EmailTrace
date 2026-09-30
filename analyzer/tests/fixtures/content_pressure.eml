@@ -1,0 +1,15 @@
+From: "PayPal Support" <service@secure-billing.example.net>
+To: bob@example.com
+Subject: URGENT: Action required - verify your account!!!
+Date: Mon, 05 Jan 2026 13:00:00 +0000
+Message-ID: <content-001@secure-billing.example.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+
+Dear customer,
+
+Your account will be suspended within 24 hours. Please verify your account and
+enter your password at http://198.51.100.7/login to avoid a penalty. You may
+also pay now by wire transfer. If you have questions, contact the IT department.
+
+Click here to continue.
