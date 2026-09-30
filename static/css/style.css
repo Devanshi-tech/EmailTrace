@@ -140,3 +140,75 @@ h1, h2, h3, h4, h5 { color: var(--et-text); font-weight: 600; }
     .et-navbar, .et-footer, .no-print { display: none !important; }
     body { background: #fff; color: #000; }
 }
+
+/* ==========================================================
+   Step 2 additions: buttons, notice, feature cards, steps
+   ========================================================== */
+
+/* ---------- Buttons ---------- */
+.et-btn-primary {
+    background-color: var(--et-accent);
+    border: 1px solid var(--et-accent);
+    color: #04161a;
+    font-weight: 600;
+}
+.et-btn-primary:hover {
+    background-color: #52c6d8;
+    border-color: #52c6d8;
+    color: #04161a;
+}
+.et-btn-outline {
+    background-color: transparent;
+    border: 1px solid var(--et-border);
+    color: var(--et-text);
+}
+.et-btn-outline:hover {
+    border-color: var(--et-accent);
+    color: var(--et-accent);
+}
+
+/* ---------- Notice banner ---------- */
+.et-notice {
+    background: rgba(212, 160, 23, 0.10);
+    border: 1px solid rgba(212, 160, 23, 0.45);
+    border-left: 4px solid var(--sev-medium);
+    border-radius: 8px;
+    padding: 0.85rem 1.1rem;
+    color: var(--et-text);
+}
+
+/* ---------- Feature cards ---------- */
+.et-feature { transition: border-color 0.15s ease; }
+.et-feature:hover { border-color: var(--et-accent); }
+.et-feature-icon {
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    background: var(--et-accent-dim);
+    border-radius: 8px;
+    margin-bottom: 0.75rem;
+}
+
+/* ---------- Workflow steps ---------- */
+.et-step {
+    background: var(--et-surface);
+    border: 1px solid var(--et-border);
+    border-radius: 10px;
+    padding: 1rem;
+    height: 100%;
+}
+.et-step-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    margin-bottom: 0.5rem;
+    border-radius: 50%;
+    background: var(--et-accent-dim);
+    color: var(--et-accent);
+    font-weight: 700;
+}
