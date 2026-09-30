@@ -253,12 +253,16 @@ def make_url_record(
         "flags": flags or [],        # e.g. ["ip_based", "url_shortener"]
     }
 
-def make_domain_record(domain: str, sources: Optional[List[str]] = None) -> Dict[str, Any]:
+def make_domain_record(
+    domain: str,
+    sources: Optional[List[str]] = None,
+    url_count: int = 0,
+) -> Dict[str, Any]:
     return {
-        "domain": domain,
-        "sources": sources or [],    # e.g. ["from", "reply_to", "url"]
+        "domain": domain,            # lowercase, exact hostname as seen
+        "sources": sources or [],    # any of: "from", "reply_to", "return_path", "url"
+        "url_count": url_count,      # number of unique extracted URLs on this host
     }
-
 
 def make_attachment_record(
     filename: Optional[str],

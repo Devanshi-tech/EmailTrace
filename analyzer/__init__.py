@@ -11,6 +11,7 @@ The returned dictionary is JSON-serializable and follows analyzer.schema.
 
 from typing import Any, Dict
 
+from .domain_analyzer import analyze_domains
 from .email_parser import parse_email, populate_basic_fields
 from .header_analyzer import analyze_headers
 from .ip_analyzer import analyze_ips
@@ -25,8 +26,8 @@ def analyze_email(file_path: str) -> Dict[str, Any]:
     """
     Analyze a simulated or authorized .eml file and return the result dict.
 
-    Step 6: parsing, authentication/header analysis, Received path,
-    timestamps, IPs and URLs. Later steps add domains, attachments,
+    Step 7: parsing, authentication/header analysis, Received path,
+    timestamps, IPs, URLs and domains. Later steps add attachments,
     content and IOCs.
     """
     parsed = parse_email(file_path)
@@ -37,4 +38,5 @@ def analyze_email(file_path: str) -> Dict[str, Any]:
     analyze_timestamps(parsed, result)
     analyze_ips(parsed, result)
     analyze_urls(parsed, result)
+    analyze_domains(result)
     return result
