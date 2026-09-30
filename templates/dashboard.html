@@ -2,10 +2,144 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
-<h2>Investigation Dashboard</h2>
-<p class="text-secondary">
-    Investigation ID:
-    <span class="et-mono">{{ investigation_id if investigation_id else "none selected" }}</span>
-</p>
-<div class="et-placeholder">Dashboard will be built in Steps 4-5.</div>
+<div id="dashboardRoot" data-investigation-id="{{ investigation_id or '' }}">
+
+    <!-- ===== PAGE HEADER ===== -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-4">
+        <div>
+            <h2 class="mb-1">Investigation Dashboard</h2>
+            <p class="text-secondary mb-0">Overview of extracted email evidence and risk indicators.</p>
+        </div>
+        {% if investigation_id %}
+        <div class="d-flex gap-2">
+            <a class="btn et-btn-outline" href="{{ url_for('analysis', investigation_id=investigation_id) }}">View Analysis</a>
+            <a class="btn et-btn-primary" href="{{ url_for('report', investigation_id=investigation_id) }}">View Report</a>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- ===== STATE: LOADING ===== -->
+    <div id="loadingState" class="et-state d-none" role="status">
+        <div class="spinner-border text-info mb-3" aria-hidden="true"></div>
+        <div>Loading investigation...</div>
+    </div>
+
+    <!-- ===== STATE: NO INVESTIGATION SELECTED ===== -->
+    <div id="emptyState" class="et-state d-none">
+        <h3 class="h5">No investigation selected</h3>
+        <p class="text-secondary">Upload an email evidence file to create an investigation.</p>
+        <a href="{{ url_for('upload') }}" class="btn et-btn-primary">Upload Evidence</a>
+    </div>
+
+    <!-- ===== STATE: ERROR ===== -->
+    <div id="errorState" class="d-none">
+        <div class="alert alert-danger d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-2" role="alert">
+            <div>
+                <strong>Could not load the investigation.</strong>
+                <div id="errorMessage" class="mt-1"></div>
+            </div>
+            <button type="button" id="retryBtn" class="btn btn-outline-light btn-sm">Retry</button>
+        </div>
+    </div>
+
+    <!-- ===== MAIN CONTENT (shown after a successful load) ===== -->
+    <div id="dashboardContent" class="d-none">
+
+        <div id="noEvidenceNote" class="alert alert-info d-none" role="status">
+            The analysis completed but no evidence items were extracted from this email.
+        </div>
+
+        <!-- Email details -->
+        <h3 class="et-section-title mt-0">Email Details</h3>
+        <div class="et-card">
+            <div class="row g-3">
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="et-detail-label">Investigation ID</div>
+                    <div id="dId" class="et-detail-value et-mono"></div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="et-detail-label">Sender</div>
+                    <div id="dSender" class="et-detail-value et-mono"></div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="et-detail-label">Recipient</div>
+                    <div id="dRecipient" class="et-detail-value et-mono"></div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="et-detail-label">Subject</div>
+                    <div id="dSubject" class="et-detail-value"></div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="et-detail-label">Date</div>
+                    <div id="dDate" class="et-detail-value"></div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="et-detail-label">Reply-To</div>
+                    <div id="dReplyTo" class="et-detail-value et-mono"></div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="et-detail-label">Return-Path</div>
+                    <div id="dReturnPath" class="et-detail-value et-mono"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary cards -->
+        <h3 class="et-section-title">Summary</h3>
+        <div class="row g-3">
+            <div class="col-6 col-md-4 col-xl-2">
+                <div class="et-card">
+                    <div class="et-card-title">URLs Detected</div>
+                    <div id="countUrls" class="et-stat-value">0</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4 col-xl-2">
+                <div class="et-card">
+                    <div class="et-card-title">IPs Detected</div>
+                    <div id="countIps" class="et-stat-value">0</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4 col-xl-2">
+                <div class="et-card">
+                    <div class="et-card-title">Domains Detected</div>
+                    <div id="countDomains" class="et-stat-value">0</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4 col-xl-2">
+                <div class="et-card">
+                    <div class="et-card-title">Attachments</div>
+                    <div id="countAttachments" class="et-stat-value">0</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4 col-xl-2">
+                <div class="et-card">
+                    <div class="et-card-title">IOCs</div>
+                    <div id="countIocs" class="et-stat-value">0</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4 col-xl-2">
+                <div class="et-card">
+                    <div class="et-card-title">Risk Indicators</div>
+                    <div id="countRisks" class="et-stat-value">0</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Risk indicators -->
+        <h3 class="et-section-title">Risk Indicators</h3>
+        <p id="riskBreakdown" class="text-secondary small"></p>
+        <div id="riskList"></div>
+
+        <!-- Detailed sections come in Step 5 -->
+        <div class="et-placeholder mt-4">
+            Detailed sections (headers, received path, timeline, IPs, URLs, domains,
+            attachments, content analysis, IOCs) will be added in Step 5.
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
 {% endblock %}

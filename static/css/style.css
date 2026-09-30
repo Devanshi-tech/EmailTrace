@@ -243,3 +243,43 @@ h1, h2, h3, h4, h5 { color: var(--et-text); font-weight: 600; }
     color: var(--et-muted);
     opacity: 1;
 }
+
+/* ==========================================================
+   Step 4 additions: dashboard layout
+   ========================================================== */
+
+/* Centered state boxes (loading / no investigation) */
+.et-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    background: var(--et-surface);
+    border: 1px solid var(--et-border);
+    border-radius: 10px;
+}
+
+/* Email detail fields */
+.et-detail-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--et-muted);
+    margin-bottom: 0.25rem;
+}
+.et-detail-value {
+    color: var(--et-text);
+    word-break: break-word;   /* long addresses never break the layout */
+}
+
+/* Risk indicator rows */
+.et-risk-item {
+    background: var(--et-surface);
+    border: 1px solid var(--et-border);
+    border-radius: 8px;
+    padding: 0.85rem 1rem;
+    margin-bottom: 0.6rem;
+}
+
+/* Summary card numbers stay compact on small screens */
+@media (max-width: 575.98px) {
+    .et-stat-value { font-size: 1.6rem; }
+}
