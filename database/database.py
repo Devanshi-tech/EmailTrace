@@ -30,6 +30,30 @@ def init_db():
 def init_app(app):
     Path(app.config["DATABASE_PATH"]).parent.mkdir(parents=True, exist_ok=True)
     app.teardown_appcontext(close_db)
-
     with app.app_context():
         init_db()
+
+
+def create_investigation(
+    investigation_id, original_filename, stored_filename, file_path, file_size, sha256
+):
+    db = get_db()
+    try:
+        db.execute("INSERT INTO investigations (id) VALUES (?)", (investigation_id,))
+        db.execute(
+            "INSERT INTO evidence "
+            "(investigation_id, original_filename, stored_filename, file_path, file_size, sha256) "
+            "VALUES (?, ?, ?, ?, ?, ?)",
+            (
+                investigation_id,
+                original_filename,
+                stored_filename,
+                file_path,
+                file_size,
+                sha256,
+            ),
+        )
+        db.commit()
+    except Exception:
+        db.rollback()
+        raise
