@@ -21,6 +21,7 @@ analysis_bp = Blueprint("analysis", __name__)
 
 
 def _fail(investigation_id, message, http_status):
+    logger.warning("Analysis failed: investigation=%s reason=%s", investigation_id, message)
     try:
         mark_failed(investigation_id, message)
     except Exception:
@@ -54,8 +55,12 @@ def analyze_investigation(investigation_id):
         return error_response("Investigation not found", 404)
 
     if not claim_for_analysis(investigation_id):
+        logger.warning(
+            "Analysis rejected: investigation=%s already in progress", investigation_id
+        )
         return error_response("Analysis already in progress", 409, status="analyzing")
 
+    logger.info("Analysis started: investigation=%s", investigation_id)
     try:
         stored_filename = get_stored_filename(investigation_id)
         file_path = Path(current_app.config["UPLOAD_FOLDER"]) / stored_filename
@@ -70,6 +75,12 @@ def analyze_investigation(investigation_id):
         logger.exception("Failed to process analysis for %s", investigation_id)
         return _fail(investigation_id, "Failed to process analysis results", 500)
 
+    logger.info(
+        "Analysis completed: investigation=%s analyzer=%s skipped=%d",
+        investigation_id,
+        analyzer_name,
+        skipped,
+    )
     record = get_investigation(investigation_id)
     return jsonify(
         {

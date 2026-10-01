@@ -1,4 +1,5 @@
 import hashlib
+import logging
 import uuid
 from email import policy
 from email.parser import BytesParser
@@ -9,6 +10,8 @@ from werkzeug.utils import secure_filename
 
 from database.database import create_investigation
 from routes import error_response
+
+logger = logging.getLogger(__name__)
 
 upload_bp = Blueprint("upload", __name__)
 
@@ -37,25 +40,32 @@ def looks_like_email(data):
         return False
 
 
+def _reject(reason, message, http_status):
+    logger.warning("Upload rejected: %s", reason)
+    return error_response(message, http_status)
+
+
 @upload_bp.post("/upload")
 def upload_evidence():
     file = request.files.get("file")
 
     if file is None:
-        return error_response("No file part named 'file' in the request", 400)
+        return _reject("no file part", "No file part named 'file' in the request", 400)
     if not file.filename:
-        return error_response("No file selected", 400)
+        return _reject("no file selected", "No file selected", 400)
     if not has_allowed_extension(file.filename):
-        return error_response("Only .eml files are accepted", 400)
+        return _reject("extension not allowed", "Only .eml files are accepted", 400)
 
     max_bytes = current_app.config["MAX_CONTENT_LENGTH"]
     data = file.stream.read(max_bytes + 1)
     if len(data) > max_bytes:
-        return error_response("File exceeds the maximum allowed size", 413)
+        return _reject("file too large", "File exceeds the maximum allowed size", 413)
     if not data:
-        return error_response("Uploaded file is empty", 400)
+        return _reject("empty file", "Uploaded file is empty", 400)
     if not looks_like_email(data):
-        return error_response("File is not a valid RFC 822 email message", 400)
+        return _reject(
+            "not a valid email", "File is not a valid RFC 822 email message", 400
+        )
 
     investigation_id = uuid.uuid4().hex
     stored_filename = f"{investigation_id}.eml"
@@ -81,6 +91,12 @@ def upload_evidence():
             file_path.unlink(missing_ok=True)
         raise
 
+    logger.info(
+        "Upload accepted: investigation=%s size=%d sha256=%s",
+        investigation_id,
+        len(data),
+        sha256,
+    )
     return (
         jsonify(
             {

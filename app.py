@@ -3,6 +3,7 @@ from pathlib import Path
 from flask import Flask, jsonify
 
 from config import Config
+from config.logging_config import register_request_logging, setup_logging
 from database.database import init_app as init_database
 from database.results import recover_interrupted_analyses
 from routes.analysis import analysis_bp
@@ -16,6 +17,9 @@ def create_app(test_config=None):
     app.config.from_object(Config)
     if test_config:
         app.config.update(test_config)
+
+    setup_logging(app)
+    register_request_logging(app)
 
     for folder in (app.config["UPLOAD_FOLDER"], app.config["REPORTS_FOLDER"]):
         Path(folder).mkdir(parents=True, exist_ok=True)
@@ -39,4 +43,6 @@ def create_app(test_config=None):
 
 
 if __name__ == "__main__":
-    create_app().run(host="127.0.0.1", port=5000, debug=Config.DEBUG)
+    application = create_app()
+    application.logger.info("Starting EmailTrace on http://127.0.0.1:5000")
+    application.run(host="127.0.0.1", port=5000, debug=Config.DEBUG)
