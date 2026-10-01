@@ -480,6 +480,62 @@ h1, h2, h3, h4, h5 { color: var(--et-text); font-weight: 600; }
 }
 
 /* ==========================================================
+   Print fix: Bootstrap dark-theme colors leaked into print
+   (screen styles are NOT affected, this is inside @media print)
+   ========================================================== */
+@media print {
+
+    /* Neutralize Bootstrap's dark theme variables for paper */
+    html[data-bs-theme="dark"],
+    :root {
+        color-scheme: light;
+        --bs-body-color: #111111;
+        --bs-body-color-rgb: 17, 17, 17;
+        --bs-body-bg: #ffffff;
+        --bs-body-bg-rgb: 255, 255, 255;
+        --bs-emphasis-color: #111111;
+        --bs-emphasis-color-rgb: 17, 17, 17;
+        --bs-secondary-color: #4a5560;
+        --bs-border-color: #c5ccd3;
+    }
+
+    /* Tables: this was the main cause (white cell text) */
+    .et-table {
+        --bs-table-color: #111111;
+        --bs-table-bg: #ffffff;
+        --bs-table-border-color: #c5ccd3;
+        --bs-table-striped-color: #111111;
+        --bs-table-striped-bg: #f1f3f5;
+        --bs-table-active-color: #111111;
+        --bs-table-active-bg: #f1f3f5;
+        --bs-table-hover-color: #111111;
+        --bs-table-hover-bg: #f1f3f5;
+        color: #111111;
+    }
+
+    .et-table tbody td {
+        color: #111111 !important;
+    }
+
+    /* Bootstrap alerts (e.g. the "no evidence" note) */
+    .alert,
+    .alert-info {
+        --bs-alert-color: #111111;
+        --bs-alert-bg: #f1f3f5;
+        --bs-alert-border-color: #c5ccd3;
+        color: #111111;
+    }
+
+    /* Make sure headings and detail values are dark too */
+    .et-report h1,
+    .et-report h2,
+    .et-report h3,
+    .et-detail-value {
+        color: #111111;
+    }
+}
+
+/* ==========================================================
    Step 8 additions: accessibility polish
    ========================================================== */
 
