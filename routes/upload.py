@@ -5,20 +5,15 @@ from email.parser import BytesParser
 from pathlib import Path
 
 from flask import Blueprint, current_app, jsonify, request
-from werkzeug.exceptions import RequestEntityTooLarge
 from werkzeug.utils import secure_filename
 
 from database.database import create_investigation
-
+from routes import error_response
 
 upload_bp = Blueprint("upload", __name__)
 
 EXPECTED_HEADERS = {"from", "to", "subject", "date", "message-id", "received"}
 DEFAULT_DISPLAY_NAME = "evidence.eml"
-
-
-def _error(message, status):
-    return jsonify({"error": message}), status
 
 
 def has_allowed_extension(filename):
@@ -36,9 +31,7 @@ def looks_like_email(data):
     if b"\x00" in data:
         return False
     try:
-        message = BytesParser(policy=policy.default).parsebytes(
-            data, headersonly=True
-        )
+        message = BytesParser(policy=policy.default).parsebytes(data, headersonly=True)
         return bool(EXPECTED_HEADERS & {key.lower() for key in message.keys()})
     except Exception:
         return False
@@ -46,26 +39,23 @@ def looks_like_email(data):
 
 @upload_bp.post("/upload")
 def upload_evidence():
-    try:
-        file = request.files.get("file")
-    except RequestEntityTooLarge:
-        return _error("File exceeds the maximum allowed size", 413)
+    file = request.files.get("file")
 
     if file is None:
-        return _error("No file part named 'file' in the request", 400)
+        return error_response("No file part named 'file' in the request", 400)
     if not file.filename:
-        return _error("No file selected", 400)
+        return error_response("No file selected", 400)
     if not has_allowed_extension(file.filename):
-        return _error("Only .eml files are accepted", 400)
+        return error_response("Only .eml files are accepted", 400)
 
     max_bytes = current_app.config["MAX_CONTENT_LENGTH"]
     data = file.stream.read(max_bytes + 1)
     if len(data) > max_bytes:
-        return _error("File exceeds the maximum allowed size", 413)
+        return error_response("File exceeds the maximum allowed size", 413)
     if not data:
-        return _error("Uploaded file is empty", 400)
+        return error_response("Uploaded file is empty", 400)
     if not looks_like_email(data):
-        return _error("File is not a valid RFC 822 email message", 400)
+        return error_response("File is not a valid RFC 822 email message", 400)
 
     investigation_id = uuid.uuid4().hex
     stored_filename = f"{investigation_id}.eml"
@@ -73,10 +63,11 @@ def upload_evidence():
     display_name = sanitize_display_name(file.filename)
     sha256 = hashlib.sha256(data).hexdigest()
 
-    with open(file_path, "xb") as handle:
-        handle.write(data)
-
+    created = False
     try:
+        with open(file_path, "xb") as handle:
+            created = True
+            handle.write(data)
         create_investigation(
             investigation_id,
             display_name,
@@ -86,7 +77,8 @@ def upload_evidence():
             sha256,
         )
     except Exception:
-        file_path.unlink(missing_ok=True)
+        if created:
+            file_path.unlink(missing_ok=True)
         raise
 
     return (

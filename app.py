@@ -6,6 +6,7 @@ from config import Config
 from database.database import init_app as init_database
 from database.results import recover_interrupted_analyses
 from routes.analysis import analysis_bp
+from routes.errors import register_error_handlers
 from routes.reports import reports_bp
 from routes.upload import upload_bp
 
@@ -28,6 +29,7 @@ def create_app(test_config=None):
     app.register_blueprint(upload_bp, url_prefix="/api")
     app.register_blueprint(analysis_bp, url_prefix="/api")
     app.register_blueprint(reports_bp, url_prefix="/api")
+    register_error_handlers(app)
 
     @app.get("/api/health")
     def health():
