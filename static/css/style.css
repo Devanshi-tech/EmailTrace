@@ -398,3 +398,83 @@ h1, h2, h3, h4, h5 { color: var(--et-text); font-weight: 600; }
 @media (max-width: 575.98px) {
     .et-chart-box { height: 240px; }
 }
+
+/* ==========================================================
+   Step 7 additions: report page (screen + print)
+   ========================================================== */
+
+.et-report { max-width: 980px; margin: 0 auto; }
+
+.et-report-head {
+    border-bottom: 2px solid var(--et-accent);
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+}
+.et-report-brand {
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--et-accent);
+}
+.et-report-title { font-size: 1.9rem; margin: 0.15rem 0 0; }
+
+.et-report-section { margin-bottom: 1.75rem; }
+.et-report-section h2 {
+    font-size: 1.1rem;
+    padding-bottom: 0.4rem;
+    margin-bottom: 0.75rem;
+    border-bottom: 1px solid var(--et-border);
+}
+.et-report-card { height: auto; }
+
+.et-statement {
+    margin-top: 2rem;
+    padding: 0.9rem 1.1rem;
+    font-weight: 600;
+    text-align: center;
+    background: var(--et-surface);
+    border: 1px solid var(--et-border);
+    border-left: 4px solid var(--sev-medium);
+    border-radius: 8px;
+}
+
+/* ---------- Print: white paper, dark text ---------- */
+@page { margin: 14mm; }
+
+@media print {
+    :root {
+        --et-bg: #ffffff;
+        --et-surface: #ffffff;
+        --et-surface-2: #f1f3f5;
+        --et-border: #c5ccd3;
+        --et-text: #111111;
+        --et-muted: #4a5560;
+        --et-accent: #0b6e7f;
+        --et-accent-dim: #e6f3f5;
+        --sev-info: #3d5a8a;
+        --sev-low: #1f7a4d;
+        --sev-medium: #8a6200;
+        --sev-high: #b02a26;
+    }
+
+    html, body { background: #ffffff !important; color: #111111 !important; }
+    main.container { max-width: 100%; padding: 0 !important; }
+
+    .et-table, .et-badge, .et-tag, .et-statement {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    .et-report { max-width: 100%; }
+    .et-report-title { font-size: 1.6rem; }
+
+    .et-report-section h2 { break-after: avoid; }
+    .et-table thead { display: table-header-group; }   /* repeat header on each page */
+    .et-table tr, .et-risk-item { break-inside: avoid; }
+    .et-card, .et-statement { break-inside: avoid; }
+
+    .et-table-wrap { border: 1px solid var(--et-border); overflow: visible !important; }
+    .et-mono { word-break: break-all; }
+    .et-url-note { color: var(--et-muted); }
+}

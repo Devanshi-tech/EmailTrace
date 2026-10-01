@@ -2,10 +2,161 @@
 {% block title %}Report{% endblock %}
 
 {% block content %}
-<h2>Investigation Report</h2>
-<p class="text-secondary">
-    Investigation ID:
-    <span class="et-mono">{{ investigation_id if investigation_id else "none selected" }}</span>
-</p>
-<div class="et-placeholder">Printable report will be built in Step 8.</div>
+<div id="reportRoot" data-investigation-id="{{ investigation_id or '' }}">
+
+    <!-- ===== STATE: LOADING ===== -->
+    <div id="loadingState" class="et-state d-none" role="status">
+        <div class="spinner-border text-info mb-3" aria-hidden="true"></div>
+        <div>Loading report...</div>
+    </div>
+
+    <!-- ===== STATE: NO INVESTIGATION SELECTED ===== -->
+    <div id="emptyState" class="et-state d-none">
+        <h3 class="h5">No investigation selected</h3>
+        <p class="text-secondary">Upload an email evidence file to create an investigation and its report.</p>
+        <a href="{{ url_for('upload') }}" class="btn et-btn-primary">Upload Evidence</a>
+    </div>
+
+    <!-- ===== STATE: ERROR ===== -->
+    <div id="errorState" class="d-none">
+        <div class="alert alert-danger d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-2" role="alert">
+            <div>
+                <strong>Could not load the report.</strong>
+                <div id="errorMessage" class="mt-1"></div>
+            </div>
+            <button type="button" id="retryBtn" class="btn btn-outline-light btn-sm">Retry</button>
+        </div>
+    </div>
+
+    <!-- ===== REPORT ===== -->
+    <div id="reportContent" class="d-none">
+
+        <!-- Toolbar (hidden when printing) -->
+        <div class="d-flex flex-column flex-sm-row justify-content-end gap-2 mb-3 no-print">
+            {% if investigation_id %}
+            <a class="btn et-btn-outline" href="{{ url_for('dashboard', investigation_id=investigation_id) }}">Back to Dashboard</a>
+            {% endif %}
+            <button type="button" id="printBtn" class="btn et-btn-primary">Print / Save as PDF</button>
+        </div>
+
+        <article class="et-report">
+
+            <!-- Report header -->
+            <header class="et-report-head">
+                <div class="et-report-brand">EmailTrace</div>
+                <h1 class="et-report-title">Investigation Report</h1>
+                <div class="row g-3 mt-2">
+                    <div class="col-12 col-md-4">
+                        <div class="et-detail-label">Investigation ID</div>
+                        <div id="rId" class="et-detail-value et-mono"></div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <div class="et-detail-label">Date analyzed</div>
+                        <div id="rAnalyzed" class="et-detail-value et-mono"></div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <div class="et-detail-label">Report generated</div>
+                        <div id="rGenerated" class="et-detail-value et-mono"></div>
+                    </div>
+                </div>
+            </header>
+
+            <div id="noEvidenceNote" class="alert alert-info d-none" role="status">
+                The analysis completed but no evidence items were extracted from this email.
+            </div>
+
+            <!-- Email details -->
+            <section class="et-report-section">
+                <h2>Email Details</h2>
+                <div class="et-card et-report-card">
+                    <div class="row g-3">
+                        <div class="col-12 col-md-6">
+                            <div class="et-detail-label">Sender</div>
+                            <div id="rSender" class="et-detail-value et-mono"></div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="et-detail-label">Recipient</div>
+                            <div id="rRecipient" class="et-detail-value et-mono"></div>
+                        </div>
+                        <div class="col-12">
+                            <div class="et-detail-label">Subject</div>
+                            <div id="rSubject" class="et-detail-value"></div>
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <div class="et-detail-label">Date</div>
+                            <div id="rDate" class="et-detail-value"></div>
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <div class="et-detail-label">Reply-To</div>
+                            <div id="rReplyTo" class="et-detail-value et-mono"></div>
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <div class="et-detail-label">Return-Path</div>
+                            <div id="rReturnPath" class="et-detail-value et-mono"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="et-report-section">
+                <h2>Header Findings</h2>
+                <div id="rptHeaders"></div>
+            </section>
+
+            <section class="et-report-section">
+                <h2>Received Path</h2>
+                <div id="rptReceived"></div>
+            </section>
+
+            <section class="et-report-section">
+                <h2>IP Findings</h2>
+                <div id="rptIps"></div>
+            </section>
+
+            <section class="et-report-section">
+                <h2>URL Findings</h2>
+                <p class="et-url-note">
+                    Extracted URLs are untrusted. They are shown as text only and are not clickable.
+                </p>
+                <div id="rptUrls"></div>
+            </section>
+
+            <section class="et-report-section">
+                <h2>Domain Findings</h2>
+                <div id="rptDomains"></div>
+            </section>
+
+            <section class="et-report-section">
+                <h2>Attachment Findings</h2>
+                <div id="rptAttachments"></div>
+            </section>
+
+            <section class="et-report-section">
+                <h2>Content Findings</h2>
+                <div id="rptContent"></div>
+            </section>
+
+            <section class="et-report-section">
+                <h2>IOC Findings</h2>
+                <div id="rptIocs"></div>
+            </section>
+
+            <section class="et-report-section">
+                <h2>Risk Indicators</h2>
+                <p id="rptRiskBreakdown" class="text-secondary small"></p>
+                <div id="rptRisks"></div>
+            </section>
+
+            <!-- Required statement -->
+            <div class="et-statement">
+                Evidence analyzed is simulated or authorized.
+            </div>
+
+        </article>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/report.js') }}"></script>
 {% endblock %}
