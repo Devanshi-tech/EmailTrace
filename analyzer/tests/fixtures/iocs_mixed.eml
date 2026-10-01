@@ -1,0 +1,37 @@
+Received: from relay.example.org (relay.example.org [198.51.100.25])
+	by mx.example.com with ESMTP id I1; Mon, 05 Jan 2026 14:00:05 +0000
+Received: from [10.0.0.9] (helo=laptop.local)
+	by relay.example.org with ESMTP id I0; Mon, 05 Jan 2026 14:00:01 +0000
+Return-Path: <bounce@mailer.example.net>
+From: "Billing Team billing@example.com" <alerts@example.com>
+To: bob@example.com
+Reply-To: helpdesk@gmail.com
+Subject: IOC extraction test
+Date: Mon, 05 Jan 2026 14:00:00 +0000
+Message-ID: <ioc-001@example.com>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="mix"
+
+--mix
+Content-Type: multipart/alternative; boundary="alt"
+
+--alt
+Content-Type: text/plain; charset="utf-8"
+
+Contact support@example.org or visit https://portal.example.org/help?id=7.
+Checksum: 5891b5b522d5df086d0ff0b110fbd9d21bb4fc7163af34d08286a2e846f6be03
+Also see http://203.0.113.9/x and logo@2x.png.
+--alt
+Content-Type: text/html; charset="utf-8"
+
+<html><body><p>Contact <a href="mailto:support@example.org?subject=Hi">support@example.org</a>
+or <a href="https://portal.example.org/help?id=7">visit</a>.</p></body></html>
+--alt--
+
+--mix
+Content-Type: text/plain; name="note.txt"
+Content-Disposition: attachment; filename="note.txt"
+Content-Transfer-Encoding: base64
+
+aGVsbG8K
+--mix--

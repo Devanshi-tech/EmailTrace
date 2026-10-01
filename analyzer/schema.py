@@ -303,10 +303,24 @@ def make_content_match(
     }
 
 
-def make_ioc(ioc_type: str, value: str, source: str) -> Dict[str, Any]:
+def make_ioc(
+    ioc_type: str,
+    value: str,
+    source: str,
+    sources: Optional[List[str]] = None,
+    defanged: Optional[str] = None,
+    note: Optional[str] = None,
+) -> Dict[str, Any]:
     if ioc_type not in IOC_TYPES:
         raise ValueError(f"Invalid IOC type: {ioc_type!r}")
-    return {"type": ioc_type, "value": value, "source": source}
+    return {
+        "type": ioc_type,
+        "value": value,
+        "source": source,                 # first place the value was seen
+        "sources": sources or [source],   # every place it was seen
+        "defanged": defanged,             # non-clickable display form
+        "note": note,                     # e.g. IP class, URL flags, hash algorithm
+    }
 
 
 def make_indicator(
