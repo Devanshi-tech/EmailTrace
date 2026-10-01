@@ -478,3 +478,39 @@ h1, h2, h3, h4, h5 { color: var(--et-text); font-weight: 600; }
     .et-mono { word-break: break-all; }
     .et-url-note { color: var(--et-muted); }
 }
+
+/* ==========================================================
+   Step 8 additions: accessibility polish
+   ========================================================== */
+
+/* Skip link (visible only when focused with the keyboard) */
+.et-skip:focus {
+    position: fixed;
+    top: 0.5rem;
+    left: 0.5rem;
+    z-index: 2000;
+    padding: 0.5rem 1rem;
+    background: var(--et-accent);
+    color: #04161a;
+    font-weight: 600;
+    border-radius: 6px;
+    text-decoration: none;
+}
+
+/* Clear keyboard focus ring */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+.btn:focus-visible {
+    outline: 2px solid var(--et-accent);
+    outline-offset: 2px;
+}
+
+/* Respect the "reduce motion" system setting */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}

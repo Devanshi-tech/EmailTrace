@@ -125,7 +125,7 @@
 {% endblock %}
 
 {% block scripts %}
-<!-- Chart.js (loaded before analysis.js) -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+<!-- Chart.js (local copy, loaded before analysis.js) -->
+<script src="{{ url_for('static', filename='vendor/chartjs/chart.umd.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/analysis.js') }}"></script>
 {% endblock %}

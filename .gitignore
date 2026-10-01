@@ -42,3 +42,12 @@ uploads/
 # Node
 node_modules/
 npm-debug.log*
+
+# Local UI preview only (never commit)
+preview_app.py
+
+# Python
+__pycache__/
+*.pyc
+venv/
+.venv/
