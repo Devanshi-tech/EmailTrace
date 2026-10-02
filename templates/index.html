@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+
+<!-- ===== HERO ===== -->
+<section class="et-hero">
+    <h1>Email<span class="et-accent">Trace</span></h1>
+    <p class="mb-4">Email Fraud Investigation Platform</p>
+
+    <div class="d-flex flex-column flex-sm-row justify-content-center gap-2">
+        <a href="{{ url_for('upload') }}" class="btn et-btn-primary btn-lg">Start Investigation</a>
+        <a href="{{ url_for('dashboard') }}" class="btn et-btn-outline btn-lg">View Dashboard</a>
+    </div>
+</section>
+
+<!-- ===== SAFETY NOTICE ===== -->
+<div class="et-notice mb-5" role="note">
+    <strong>Evidence handling:</strong>
+    Only upload simulated or authorized email evidence.
+</div>
+
+<!-- ===== FEATURES ===== -->
+<h2 class="et-section-title">Platform Capabilities</h2>
+
+<div class="row g-3 justify-content-center">
+
+    <div class="col-12 col-md-6 col-lg-4">
+        <div class="et-card et-feature">
+            <div class="et-feature-icon">&#128233;</div>
+            <h3 class="h6">Analyze Email Evidence</h3>
+            <p class="text-secondary mb-0">Upload a .eml file and start a structured investigation with a unique case ID.</p>
+        </div>
+    </div>
+
+    <div class="col-12 col-md-6 col-lg-4">
+        <div class="et-card et-feature">
+            <div class="et-feature-icon">&#128203;</div>
+            <h3 class="h6">Header Investigation</h3>
+            <p class="text-secondary mb-0">Review sender, Reply-To, Return-Path and the Received path in a readable layout.</p>
+        </div>
+    </div>
+
+    <div class="col-12 col-md-6 col-lg-4">
+        <div class="et-card et-feature">
+            <div class="et-feature-icon">&#127760;</div>
+            <h3 class="h6">IP &amp; Domain Analysis</h3>
+            <p class="text-secondary mb-0">See extracted IP addresses and domains with their source and classification.</p>
+        </div>
+    </div>
+
+    <div class="col-12 col-md-6 col-lg-4">
+        <div class="et-card et-feature">
+            <div class="et-feature-icon">&#128279;</div>
+            <h3 class="h6">URL Investigation</h3>
+            <p class="text-secondary mb-0">Inspect extracted URLs and hostnames as plain text. Links are never clickable.</p>
+        </div>
+    </div>
+
+    <div class="col-12 col-md-6 col-lg-4">
+        <div class="et-card et-feature">
+            <div class="et-feature-icon">&#128206;</div>
+            <h3 class="h6">Attachment Analysis</h3>
+            <p class="text-secondary mb-0">View attachment filename, MIME type, size and SHA-256 hash.</p>
+        </div>
+    </div>
+
+    <div class="col-12 col-md-6 col-lg-4">
+        <div class="et-card et-feature">
+            <div class="et-feature-icon">&#128269;</div>
+            <h3 class="h6">IOC Detection</h3>
+            <p class="text-secondary mb-0">Collect indicators of compromise by type, value and source in one table.</p>
+        </div>
+    </div>
+
+    <div class="col-12 col-md-6 col-lg-4">
+        <div class="et-card et-feature">
+            <div class="et-feature-icon">&#128196;</div>
+            <h3 class="h6">Investigation Reports</h3>
+            <p class="text-secondary mb-0">Generate a printable report with all findings and severity-rated risk indicators.</p>
+        </div>
+    </div>
+
+</div>
+
+<!-- ===== WORKFLOW ===== -->
+<h2 class="et-section-title mt-5">How It Works</h2>
+
+<div class="row g-3 text-center">
+    <div class="col-6 col-lg-3">
+        <div class="et-step"><span class="et-step-num">1</span><div>Upload</div><small class="text-secondary">Select a .eml file</small></div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="et-step"><span class="et-step-num">2</span><div>Analyze</div><small class="text-secondary">Backend extracts evidence</small></div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="et-step"><span class="et-step-num">3</span><div>Review</div><small class="text-secondary">Explore the dashboard</small></div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="et-step"><span class="et-step-num">4</span><div>Report</div><small class="text-secondary">Print the findings</small></div>
+    </div>
+</div>
+
+{% endblock %}

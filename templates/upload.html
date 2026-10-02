@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}Upload Evidence{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-12 col-lg-8">
+
+        <h2 class="mb-1">Upload Evidence</h2>
+        <p class="text-secondary">Select an email file (.eml) to start a new investigation.</p>
+
+        <!-- Safety notice -->
+        <div class="et-notice mb-4" role="note">
+            <strong>Important:</strong>
+            Only upload simulated or authorized email evidence.
+        </div>
+
+        <!-- Status messages are inserted here by upload.js -->
+        <div id="alertArea" aria-live="polite"></div>
+
+        <div class="et-card">
+            <form id="uploadForm" novalidate
+                  data-dashboard-base="{{ url_for('dashboard') }}">
+
+                <label for="evidenceFile" class="form-label et-card-title">Email evidence file</label>
+                <input type="file" class="form-control mb-3" id="evidenceFile"
+                       name="file" accept=".eml,message/rfc822">
+                <div class="form-text mb-3">Accepted format: .eml &middot; Maximum size: 10 MB</div>
+
+                <!-- Shown after a valid file is selected -->
+                <div id="fileInfo" class="et-file-info d-none">
+                    <div class="row g-2">
+                        <div class="col-12 col-sm-8">
+                            <div class="et-card-title mb-1">Filename</div>
+                            <div id="fileName" class="et-mono"></div>
+                        </div>
+                        <div class="col-12 col-sm-4">
+                            <div class="et-card-title mb-1">File size</div>
+                            <div id="fileSize" class="et-mono"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex flex-column flex-sm-row gap-2 mt-4">
+                    <button type="submit" id="uploadBtn" class="btn et-btn-primary" disabled>
+                        <span id="uploadSpinner" class="spinner-border spinner-border-sm me-2 d-none"
+                              role="status" aria-hidden="true"></span>
+                        <span id="uploadBtnText">Upload Evidence</span>
+                    </button>
+                    <button type="button" id="resetBtn" class="btn et-btn-outline">Clear</button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/upload.js') }}"></script>
+{% endblock %}

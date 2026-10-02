@@ -1,0 +1,207 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div id="dashboardRoot" data-investigation-id="{{ investigation_id or '' }}">
+
+    <!-- ===== PAGE HEADER ===== -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-4">
+        <div>
+            <h2 class="mb-1">Investigation Dashboard</h2>
+            <p class="text-secondary mb-0">Overview of extracted email evidence and risk indicators.</p>
+        </div>
+        {% if investigation_id %}
+        <div class="d-flex gap-2">
+            <a class="btn et-btn-outline" href="{{ url_for('analysis', investigation_id=investigation_id) }}">View Analysis</a>
+            <a class="btn et-btn-primary" href="{{ url_for('report', investigation_id=investigation_id) }}">View Report</a>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- ===== STATE: LOADING ===== -->
+    <div id="loadingState" class="et-state d-none" role="status">
+        <div class="spinner-border text-info mb-3" aria-hidden="true"></div>
+        <div>Loading investigation...</div>
+    </div>
+
+    <!-- ===== STATE: NO INVESTIGATION SELECTED ===== -->
+    <div id="emptyState" class="et-state d-none">
+        <h3 class="h5">No investigation selected</h3>
+        <p class="text-secondary">Upload an email evidence file to create an investigation.</p>
+        <a href="{{ url_for('upload') }}" class="btn et-btn-primary">Upload Evidence</a>
+    </div>
+
+    <!-- ===== STATE: ERROR ===== -->
+    <div id="errorState" class="d-none">
+        <div class="alert alert-danger d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-2" role="alert">
+            <div>
+                <strong>Could not load the investigation.</strong>
+                <div id="errorMessage" class="mt-1"></div>
+            </div>
+            <button type="button" id="retryBtn" class="btn btn-outline-light btn-sm">Retry</button>
+        </div>
+    </div>
+
+    <!-- ===== MAIN CONTENT (shown after a successful load) ===== -->
+    <div id="dashboardContent" class="d-none">
+
+        <div id="noEvidenceNote" class="alert alert-info d-none" role="status">
+            The analysis completed but no evidence items were extracted from this email.
+        </div>
+
+        <!-- Email details -->
+        <h3 class="et-section-title mt-0">Email Details</h3>
+        <div class="et-card">
+            <div class="row g-3">
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="et-detail-label">Investigation ID</div>
+                    <div id="dId" class="et-detail-value et-mono"></div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="et-detail-label">Sender</div>
+                    <div id="dSender" class="et-detail-value et-mono"></div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="et-detail-label">Recipient</div>
+                    <div id="dRecipient" class="et-detail-value et-mono"></div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="et-detail-label">Subject</div>
+                    <div id="dSubject" class="et-detail-value"></div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="et-detail-label">Date</div>
+                    <div id="dDate" class="et-detail-value"></div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="et-detail-label">Reply-To</div>
+                    <div id="dReplyTo" class="et-detail-value et-mono"></div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="et-detail-label">Return-Path</div>
+                    <div id="dReturnPath" class="et-detail-value et-mono"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary cards -->
+        <h3 class="et-section-title">Summary</h3>
+        <div class="row g-3">
+            <div class="col-6 col-md-4 col-xl-2">
+                <div class="et-card">
+                    <div class="et-card-title">URLs Detected</div>
+                    <div id="countUrls" class="et-stat-value">0</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4 col-xl-2">
+                <div class="et-card">
+                    <div class="et-card-title">IPs Detected</div>
+                    <div id="countIps" class="et-stat-value">0</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4 col-xl-2">
+                <div class="et-card">
+                    <div class="et-card-title">Domains Detected</div>
+                    <div id="countDomains" class="et-stat-value">0</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4 col-xl-2">
+                <div class="et-card">
+                    <div class="et-card-title">Attachments</div>
+                    <div id="countAttachments" class="et-stat-value">0</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4 col-xl-2">
+                <div class="et-card">
+                    <div class="et-card-title">IOCs</div>
+                    <div id="countIocs" class="et-stat-value">0</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4 col-xl-2">
+                <div class="et-card">
+                    <div class="et-card-title">Risk Indicators</div>
+                    <div id="countRisks" class="et-stat-value">0</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Risk indicators -->
+        <h3 class="et-section-title">Risk Indicators</h3>
+        <p id="riskBreakdown" class="text-secondary small"></p>
+        <div id="riskList"></div>
+
+        <!-- ===== JUMP LINKS ===== -->
+        <nav class="et-jumpnav mt-4" aria-label="Jump to section">
+            <a href="#sec-headers">Headers</a>
+            <a href="#sec-received">Received Path</a>
+            <a href="#sec-timeline">Timeline</a>
+            <a href="#sec-ips">IPs</a>
+            <a href="#sec-urls">URLs</a>
+            <a href="#sec-domains">Domains</a>
+            <a href="#sec-attachments">Attachments</a>
+            <a href="#sec-content">Content</a>
+            <a href="#sec-iocs">IOCs</a>
+        </nav>
+
+        <!-- ===== HEADER INVESTIGATION ===== -->
+        <h3 class="et-section-title" id="sec-headers">
+            Header Investigation <span class="et-count" id="cntHeaders">0</span>
+        </h3>
+        <div id="tblHeaders"></div>
+
+        <!-- ===== RECEIVED PATH ===== -->
+        <h3 class="et-section-title" id="sec-received">Received Path</h3>
+        <div id="receivedPath"></div>
+
+        <!-- ===== TIMELINE ===== -->
+        <h3 class="et-section-title" id="sec-timeline">
+            Timeline <span class="et-count" id="cntTimeline">0</span>
+        </h3>
+        <div id="tblTimeline"></div>
+
+        <!-- ===== IP ANALYSIS ===== -->
+        <h3 class="et-section-title" id="sec-ips">
+            IP Analysis <span class="et-count" id="cntIps">0</span>
+        </h3>
+        <div id="tblIps"></div>
+
+        <!-- ===== URL INVESTIGATION ===== -->
+        <h3 class="et-section-title" id="sec-urls">
+            URL Investigation <span class="et-count" id="cntUrls">0</span>
+        </h3>
+        <p class="et-url-note">
+            Extracted URLs are untrusted. They are displayed as text only and are not clickable.
+        </p>
+        <div id="tblUrls"></div>
+
+        <!-- ===== DOMAIN ANALYSIS ===== -->
+        <h3 class="et-section-title" id="sec-domains">
+            Domain Analysis <span class="et-count" id="cntDomains">0</span>
+        </h3>
+        <div id="tblDomains"></div>
+
+        <!-- ===== ATTACHMENTS ===== -->
+        <h3 class="et-section-title" id="sec-attachments">
+            Attachment Analysis <span class="et-count" id="cntAttachments">0</span>
+        </h3>
+        <div id="tblAttachments"></div>
+
+        <!-- ===== CONTENT ANALYSIS ===== -->
+        <h3 class="et-section-title" id="sec-content">
+            Content Analysis <span class="et-count" id="cntContent">0</span>
+        </h3>
+        <div id="tblContent"></div>
+
+        <!-- ===== IOC DETECTION ===== -->
+        <h3 class="et-section-title" id="sec-iocs">
+            IOC Detection <span class="et-count" id="cntIocs">0</span>
+        </h3>
+        <div id="tblIocs"></div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}

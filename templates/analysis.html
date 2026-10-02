@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+{% block title %}Analysis{% endblock %}
+
+{% block content %}
+<div id="analysisRoot" data-investigation-id="{{ investigation_id or '' }}">
+
+    <!-- ===== PAGE HEADER ===== -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-4">
+        <div>
+            <h2 class="mb-1">Analysis</h2>
+            <p class="text-secondary mb-0">Run the analysis and review evidence and risk distribution.</p>
+        </div>
+        {% if investigation_id %}
+        <div class="d-flex gap-2">
+            <a class="btn et-btn-outline" href="{{ url_for('dashboard', investigation_id=investigation_id) }}">View Dashboard</a>
+            <a class="btn et-btn-primary" href="{{ url_for('report', investigation_id=investigation_id) }}">View Report</a>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- ===== STATE: LOADING ===== -->
+    <div id="loadingState" class="et-state d-none" role="status">
+        <div class="spinner-border text-info mb-3" aria-hidden="true"></div>
+        <div>Loading investigation...</div>
+    </div>
+
+    <!-- ===== STATE: NO INVESTIGATION SELECTED ===== -->
+    <div id="emptyState" class="et-state d-none">
+        <h3 class="h5">No investigation selected</h3>
+        <p class="text-secondary">Upload an email evidence file to create an investigation.</p>
+        <a href="{{ url_for('upload') }}" class="btn et-btn-primary">Upload Evidence</a>
+    </div>
+
+    <!-- ===== STATE: ERROR ===== -->
+    <div id="errorState" class="d-none">
+        <div class="alert alert-danger d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-2" role="alert">
+            <div>
+                <strong>Could not load the investigation.</strong>
+                <div id="errorMessage" class="mt-1"></div>
+            </div>
+            <button type="button" id="retryBtn" class="btn btn-outline-light btn-sm">Retry</button>
+        </div>
+    </div>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <div id="analysisContent" class="d-none">
+
+        <!-- Run results / errors appear here -->
+        <div id="alertArea" aria-live="polite"></div>
+
+        <!-- Run analysis card -->
+        <div class="et-card mb-4">
+            <div class="row g-3 align-items-center">
+                <div class="col-12 col-md-3">
+                    <div class="et-detail-label">Investigation ID</div>
+                    <div id="aId" class="et-detail-value et-mono"></div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="et-detail-label">Status</div>
+                    <div id="aStatus" class="et-detail-value"></div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="et-detail-label">Last analyzed</div>
+                    <div id="aAnalyzedAt" class="et-detail-value et-mono"></div>
+                </div>
+                <div class="col-12 col-md-3">
+                    <button type="button" id="runBtn" class="btn et-btn-primary w-100">
+                        <span id="runSpinner" class="spinner-border spinner-border-sm me-2 d-none"
+                              role="status" aria-hidden="true"></span>
+                        <span id="runBtnText">Run Analysis</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="noResultsNote" class="alert alert-info d-none" role="status">
+            No analysis results are available yet. Click the button above to run the analysis.
+            If the analysis has already run, this email may contain no extractable evidence.
+        </div>
+
+        <div id="chartsNote" class="alert alert-warning d-none" role="status">
+            Charts could not be loaded (the Chart.js library is unavailable).
+            The counts table and findings below still show the results.
+        </div>
+
+        <!-- Charts -->
+        <div class="row g-3">
+            <div class="col-12 col-lg-5">
+                <div class="et-card">
+                    <div class="et-card-title">Risk indicators by severity</div>
+                    <div id="severityBox" class="et-chart-box">
+                        <canvas id="severityChart" role="img"
+                                aria-label="Doughnut chart of risk indicators by severity"></canvas>
+                    </div>
+                    <div id="severityEmpty" class="et-placeholder d-none">No risk indicators to chart.</div>
+                </div>
+            </div>
+            <div class="col-12 col-lg-7">
+                <div class="et-card">
+                    <div class="et-card-title">Evidence extracted</div>
+                    <div id="evidenceBox" class="et-chart-box">
+                        <canvas id="evidenceChart" role="img"
+                                aria-label="Bar chart of extracted evidence counts"></canvas>
+                    </div>
+                    <div id="evidenceEmpty" class="et-placeholder d-none">No evidence to chart.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary table + findings -->
+        <div class="row g-3 mt-1">
+            <div class="col-12 col-lg-5">
+                <h3 class="et-section-title mt-4">Evidence Summary</h3>
+                <div id="summaryTable"></div>
+            </div>
+            <div class="col-12 col-lg-7">
+                <h3 class="et-section-title mt-4">Risk Indicators</h3>
+                <p id="findingsBreakdown" class="text-secondary small"></p>
+                <div id="findingsList"></div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<!-- Chart.js (local copy, loaded before analysis.js) -->
+<script src="{{ url_for('static', filename='vendor/chartjs/chart.umd.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/analysis.js') }}"></script>
+{% endblock %}

@@ -45,4 +45,16 @@ Thumbs.db
 # Node
 node_modules/
 npm-debug.log*
+<<<<<<< HEAD
+
+# Local UI preview only (never commit)
+preview_app.py
+
+# Python
+__pycache__/
+*.pyc
+venv/
+.venv/
+=======
 logs/
+>>>>>>> origin/main

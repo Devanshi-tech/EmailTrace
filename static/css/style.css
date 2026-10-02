@@ -1,0 +1,572 @@
+/* ==========================================================
+   EmailTrace - Design System
+   Dark, clean, professional forensic-dashboard theme
+   ========================================================== */
+
+:root {
+    --et-bg:            #0d1117;
+    --et-surface:       #161b22;
+    --et-surface-2:     #1c232d;
+    --et-border:        #2a323d;
+    --et-text:          #e6edf3;
+    --et-muted:         #8b98a5;
+    --et-accent:        #3fb6c9;   /* calm teal, not flashy */
+    --et-accent-dim:    rgba(63, 182, 201, 0.12);
+
+    /* Severity colors */
+    --sev-info:         #6c8ebf;
+    --sev-low:          #3fa672;
+    --sev-medium:       #d4a017;
+    --sev-high:         #d9534f;
+}
+
+/* ---------- Base ---------- */
+body {
+    background-color: var(--et-bg);
+    color: var(--et-text);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+h1, h2, h3, h4, h5 { color: var(--et-text); font-weight: 600; }
+.et-accent { color: var(--et-accent); }
+.text-secondary { color: var(--et-muted) !important; }
+
+/* ---------- Navbar ---------- */
+.et-navbar {
+    background-color: var(--et-surface);
+    border-bottom: 1px solid var(--et-border);
+}
+.et-brand { font-weight: 700; letter-spacing: 0.3px; }
+.et-brand-mark { color: var(--et-accent); margin-right: 4px; }
+.et-navbar .nav-link { color: var(--et-muted); font-size: 0.95rem; }
+.et-navbar .nav-link:hover { color: var(--et-text); }
+.et-navbar .nav-link.active {
+    color: var(--et-accent);
+    border-bottom: 2px solid var(--et-accent);
+}
+
+/* ---------- Footer ---------- */
+.et-footer {
+    background-color: var(--et-surface);
+    border-top: 1px solid var(--et-border);
+}
+.et-safe-note { color: var(--sev-medium); }
+
+/* ---------- Cards ---------- */
+.et-card {
+    background-color: var(--et-surface);
+    border: 1px solid var(--et-border);
+    border-radius: 10px;
+    padding: 1.25rem;
+    height: 100%;
+}
+.et-card-title {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--et-muted);
+    margin-bottom: 0.5rem;
+}
+.et-stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--et-accent);
+    line-height: 1.1;
+}
+
+/* ---------- Section headings ---------- */
+.et-section-title {
+    font-size: 1.15rem;
+    padding-bottom: 0.5rem;
+    margin: 2rem 0 1rem;
+    border-bottom: 1px solid var(--et-border);
+}
+
+/* ---------- Tables ---------- */
+.et-table {
+    --bs-table-bg: var(--et-surface);
+    --bs-table-border-color: var(--et-border);
+    --bs-table-striped-bg: var(--et-surface-2);
+    color: var(--et-text);
+    margin-bottom: 0;
+}
+.et-table thead th {
+    background-color: var(--et-surface-2);
+    color: var(--et-muted);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    border-bottom: 1px solid var(--et-border);
+}
+
+/* Untrusted data (URLs, hashes, IPs): plain monospace text, never links */
+.et-mono {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.85rem;
+    word-break: break-all;
+}
+
+/* ---------- Severity badges ---------- */
+.et-badge {
+    display: inline-block;
+    padding: 0.25em 0.6em;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border: 1px solid transparent;
+}
+.et-badge-info   { color: var(--sev-info);   background: rgba(108,142,191,.15); border-color: var(--sev-info); }
+.et-badge-low    { color: var(--sev-low);    background: rgba(63,166,114,.15);  border-color: var(--sev-low); }
+.et-badge-medium { color: var(--sev-medium); background: rgba(212,160,23,.15);  border-color: var(--sev-medium); }
+.et-badge-high   { color: var(--sev-high);   background: rgba(217,83,79,.15);   border-color: var(--sev-high); }
+
+/* ---------- Hero (home page) ---------- */
+.et-hero { padding: 3rem 0 2rem; text-align: center; }
+.et-hero h1 { font-size: clamp(2rem, 5vw, 3rem); }
+.et-hero p  { color: var(--et-muted); font-size: 1.1rem; }
+
+/* ---------- Placeholder blocks (used in Step 1 only) ---------- */
+.et-placeholder {
+    border: 1px dashed var(--et-border);
+    border-radius: 10px;
+    padding: 2rem;
+    text-align: center;
+    color: var(--et-muted);
+    background: var(--et-accent-dim);
+}
+
+/* ---------- Print (used by report page later) ---------- */
+@media print {
+    .et-navbar, .et-footer, .no-print { display: none !important; }
+    body { background: #fff; color: #000; }
+}
+
+/* ==========================================================
+   Step 2 additions: buttons, notice, feature cards, steps
+   ========================================================== */
+
+/* ---------- Buttons ---------- */
+.et-btn-primary {
+    background-color: var(--et-accent);
+    border: 1px solid var(--et-accent);
+    color: #04161a;
+    font-weight: 600;
+}
+.et-btn-primary:hover {
+    background-color: #52c6d8;
+    border-color: #52c6d8;
+    color: #04161a;
+}
+.et-btn-outline {
+    background-color: transparent;
+    border: 1px solid var(--et-border);
+    color: var(--et-text);
+}
+.et-btn-outline:hover {
+    border-color: var(--et-accent);
+    color: var(--et-accent);
+}
+
+/* ---------- Notice banner ---------- */
+.et-notice {
+    background: rgba(212, 160, 23, 0.10);
+    border: 1px solid rgba(212, 160, 23, 0.45);
+    border-left: 4px solid var(--sev-medium);
+    border-radius: 8px;
+    padding: 0.85rem 1.1rem;
+    color: var(--et-text);
+}
+
+/* ---------- Feature cards ---------- */
+.et-feature { transition: border-color 0.15s ease; }
+.et-feature:hover { border-color: var(--et-accent); }
+.et-feature-icon {
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    background: var(--et-accent-dim);
+    border-radius: 8px;
+    margin-bottom: 0.75rem;
+}
+
+/* ---------- Workflow steps ---------- */
+.et-step {
+    background: var(--et-surface);
+    border: 1px solid var(--et-border);
+    border-radius: 10px;
+    padding: 1rem;
+    height: 100%;
+}
+.et-step-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    margin-bottom: 0.5rem;
+    border-radius: 50%;
+    background: var(--et-accent-dim);
+    color: var(--et-accent);
+    font-weight: 700;
+}
+
+/* ==========================================================
+   Step 3 additions: upload page
+   ========================================================== */
+
+.et-file-info {
+    background: var(--et-surface-2);
+    border: 1px solid var(--et-border);
+    border-left: 4px solid var(--et-accent);
+    border-radius: 8px;
+    padding: 0.9rem 1rem;
+}
+
+/* File input styling to match the dark theme */
+.form-control[type="file"] {
+    background-color: var(--et-surface-2);
+    border-color: var(--et-border);
+    color: var(--et-text);
+}
+.form-control[type="file"]:focus {
+    border-color: var(--et-accent);
+    box-shadow: 0 0 0 0.2rem var(--et-accent-dim);
+}
+
+/* Disabled primary button should look clearly inactive */
+.et-btn-primary:disabled {
+    background-color: var(--et-surface-2);
+    border-color: var(--et-border);
+    color: var(--et-muted);
+    opacity: 1;
+}
+
+/* ==========================================================
+   Step 4 additions: dashboard layout
+   ========================================================== */
+
+/* Centered state boxes (loading / no investigation) */
+.et-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    background: var(--et-surface);
+    border: 1px solid var(--et-border);
+    border-radius: 10px;
+}
+
+/* Email detail fields */
+.et-detail-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--et-muted);
+    margin-bottom: 0.25rem;
+}
+.et-detail-value {
+    color: var(--et-text);
+    word-break: break-word;   /* long addresses never break the layout */
+}
+
+/* Risk indicator rows */
+.et-risk-item {
+    background: var(--et-surface);
+    border: 1px solid var(--et-border);
+    border-radius: 8px;
+    padding: 0.85rem 1rem;
+    margin-bottom: 0.6rem;
+}
+
+/* Summary card numbers stay compact on small screens */
+@media (max-width: 575.98px) {
+    .et-stat-value { font-size: 1.6rem; }
+}
+
+/* ==========================================================
+   Step 5 additions: detailed dashboard sections
+   ========================================================== */
+
+/* Section titles: offset for sticky navbar when using jump links */
+.et-section-title { scroll-margin-top: 80px; }
+
+/* Item count next to a section title */
+.et-count {
+    display: inline-block;
+    margin-left: 0.4rem;
+    padding: 0.1em 0.55em;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--et-accent);
+    background: var(--et-accent-dim);
+    border-radius: 999px;
+    vertical-align: middle;
+}
+
+/* Jump links */
+.et-jumpnav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+.et-jumpnav a {
+    padding: 0.3rem 0.75rem;
+    font-size: 0.8rem;
+    color: var(--et-muted);
+    background: var(--et-surface);
+    border: 1px solid var(--et-border);
+    border-radius: 999px;
+    text-decoration: none;
+}
+.et-jumpnav a:hover { color: var(--et-accent); border-color: var(--et-accent); }
+
+/* Table wrapper */
+.et-table-wrap {
+    border: 1px solid var(--et-border);
+    border-radius: 10px;
+}
+.et-table td, .et-table th { padding: 0.65rem 0.85rem; vertical-align: middle; }
+
+/* Indicator tags (neutral, not a verdict) */
+.et-tag {
+    display: inline-block;
+    padding: 0.15em 0.55em;
+    font-size: 0.75rem;
+    color: var(--et-text);
+    background: var(--et-surface-2);
+    border: 1px solid var(--et-border);
+    border-radius: 6px;
+}
+
+/* Note above the URL table */
+.et-url-note {
+    font-size: 0.85rem;
+    color: var(--sev-medium);
+    margin-bottom: 0.75rem;
+}
+
+/* Received path chain */
+.et-hop-chain {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.et-hop {
+    width: 100%;
+    max-width: 560px;
+    background: var(--et-surface);
+    border: 1px solid var(--et-border);
+    border-left: 4px solid var(--et-accent);
+    border-radius: 10px;
+    padding: 0.9rem 1.1rem;
+}
+.et-hop-end { border-left-color: var(--sev-low); }
+.et-hop-label {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--et-accent);
+    margin-bottom: 0.15rem;
+}
+.et-hop-end .et-hop-label { color: var(--sev-low); }
+.et-hop-title { font-size: 1rem; margin-bottom: 0.4rem; }
+.et-hop-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+}
+.et-hop-key { min-width: 100px; color: var(--et-muted); }
+.et-hop-arrow {
+    font-size: 1.4rem;
+    line-height: 1;
+    color: var(--et-muted);
+    padding: 0.35rem 0;
+}
+
+/* ==========================================================
+   Step 6 additions: analysis page charts
+   ========================================================== */
+
+/* Chart.js needs a container with a fixed height when maintainAspectRatio is false */
+.et-chart-box {
+    position: relative;
+    height: 280px;
+}
+
+@media (max-width: 575.98px) {
+    .et-chart-box { height: 240px; }
+}
+
+/* ==========================================================
+   Step 7 additions: report page (screen + print)
+   ========================================================== */
+
+.et-report { max-width: 980px; margin: 0 auto; }
+
+.et-report-head {
+    border-bottom: 2px solid var(--et-accent);
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+}
+.et-report-brand {
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--et-accent);
+}
+.et-report-title { font-size: 1.9rem; margin: 0.15rem 0 0; }
+
+.et-report-section { margin-bottom: 1.75rem; }
+.et-report-section h2 {
+    font-size: 1.1rem;
+    padding-bottom: 0.4rem;
+    margin-bottom: 0.75rem;
+    border-bottom: 1px solid var(--et-border);
+}
+.et-report-card { height: auto; }
+
+.et-statement {
+    margin-top: 2rem;
+    padding: 0.9rem 1.1rem;
+    font-weight: 600;
+    text-align: center;
+    background: var(--et-surface);
+    border: 1px solid var(--et-border);
+    border-left: 4px solid var(--sev-medium);
+    border-radius: 8px;
+}
+
+/* ---------- Print: white paper, dark text ---------- */
+@page { margin: 14mm; }
+
+@media print {
+    :root {
+        --et-bg: #ffffff;
+        --et-surface: #ffffff;
+        --et-surface-2: #f1f3f5;
+        --et-border: #c5ccd3;
+        --et-text: #111111;
+        --et-muted: #4a5560;
+        --et-accent: #0b6e7f;
+        --et-accent-dim: #e6f3f5;
+        --sev-info: #3d5a8a;
+        --sev-low: #1f7a4d;
+        --sev-medium: #8a6200;
+        --sev-high: #b02a26;
+    }
+
+    html, body { background: #ffffff !important; color: #111111 !important; }
+    main.container { max-width: 100%; padding: 0 !important; }
+
+    .et-table, .et-badge, .et-tag, .et-statement {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    .et-report { max-width: 100%; }
+    .et-report-title { font-size: 1.6rem; }
+
+    .et-report-section h2 { break-after: avoid; }
+    .et-table thead { display: table-header-group; }   /* repeat header on each page */
+    .et-table tr, .et-risk-item { break-inside: avoid; }
+    .et-card, .et-statement { break-inside: avoid; }
+
+    .et-table-wrap { border: 1px solid var(--et-border); overflow: visible !important; }
+    .et-mono { word-break: break-all; }
+    .et-url-note { color: var(--et-muted); }
+}
+
+/* ==========================================================
+   Print fix: Bootstrap dark-theme colors leaked into print
+   (screen styles are NOT affected, this is inside @media print)
+   ========================================================== */
+@media print {
+
+    /* Neutralize Bootstrap's dark theme variables for paper */
+    html[data-bs-theme="dark"],
+    :root {
+        color-scheme: light;
+        --bs-body-color: #111111;
+        --bs-body-color-rgb: 17, 17, 17;
+        --bs-body-bg: #ffffff;
+        --bs-body-bg-rgb: 255, 255, 255;
+        --bs-emphasis-color: #111111;
+        --bs-emphasis-color-rgb: 17, 17, 17;
+        --bs-secondary-color: #4a5560;
+        --bs-border-color: #c5ccd3;
+    }
+
+    /* Tables: this was the main cause (white cell text) */
+    .et-table {
+        --bs-table-color: #111111;
+        --bs-table-bg: #ffffff;
+        --bs-table-border-color: #c5ccd3;
+        --bs-table-striped-color: #111111;
+        --bs-table-striped-bg: #f1f3f5;
+        --bs-table-active-color: #111111;
+        --bs-table-active-bg: #f1f3f5;
+        --bs-table-hover-color: #111111;
+        --bs-table-hover-bg: #f1f3f5;
+        color: #111111;
+    }
+
+    .et-table tbody td {
+        color: #111111 !important;
+    }
+
+    /* Bootstrap alerts (e.g. the "no evidence" note) */
+    .alert,
+    .alert-info {
+        --bs-alert-color: #111111;
+        --bs-alert-bg: #f1f3f5;
+        --bs-alert-border-color: #c5ccd3;
+        color: #111111;
+    }
+
+    /* Make sure headings and detail values are dark too */
+    .et-report h1,
+    .et-report h2,
+    .et-report h3,
+    .et-detail-value {
+        color: #111111;
+    }
+}
+
+/* ==========================================================
+   Step 8 additions: accessibility polish
+   ========================================================== */
+
+/* Skip link (visible only when focused with the keyboard) */
+.et-skip:focus {
+    position: fixed;
+    top: 0.5rem;
+    left: 0.5rem;
+    z-index: 2000;
+    padding: 0.5rem 1rem;
+    background: var(--et-accent);
+    color: #04161a;
+    font-weight: 600;
+    border-radius: 6px;
+    text-decoration: none;
+}
+
+/* Clear keyboard focus ring */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+.btn:focus-visible {
+    outline: 2px solid var(--et-accent);
+    outline-offset: 2px;
+}
+
+/* Respect the "reduce motion" system setting */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
