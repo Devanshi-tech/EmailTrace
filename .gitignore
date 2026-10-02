@@ -3,18 +3,36 @@ __pycache__/
 *.py[cod]
 *.pyo
 
-# Virtual environment
+# Virtual environments
 venv/
 .venv/
 env/
 
-# Environment variables
+# Environment variables / secrets
 .env
 .env.*
+*.key
+*.pem
 
 # Flask
 instance/
 .pytest_cache/
+
+# SQLite database
+*.db
+*.sqlite
+*.sqlite3
+
+# Uploaded email evidence
+uploads/*
+!uploads/.gitkeep
+
+# Generated reports
+reports/*
+!reports/.gitkeep
+
+# Logs
+*.log
 
 # IDE
 .vscode/
@@ -24,24 +42,10 @@ instance/
 .DS_Store
 Thumbs.db
 
-# Logs
-*.log
-
-# Database
-*.db
-*.sqlite
-*.sqlite3
-
-# Uploaded files
-uploads/
-
-# Secrets / keys
-*.key
-*.pem
-
 # Node
 node_modules/
 npm-debug.log*
+<<<<<<< HEAD
 
 # Local UI preview only (never commit)
 preview_app.py
@@ -51,3 +55,6 @@ __pycache__/
 *.pyc
 venv/
 .venv/
+=======
+logs/
+>>>>>>> origin/main
