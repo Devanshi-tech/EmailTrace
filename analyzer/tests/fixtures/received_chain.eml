@@ -1,0 +1,16 @@
+Received: from mx1.example.com (mx1.example.com [198.51.100.20])
+	by mail.example.com (Postfix) with ESMTPS id 3ABC123
+	for <bob@example.com>; Mon, 05 Jan 2026 10:15:30 +0000
+Received: from relay.example.org (relay.example.org [203.0.113.25])
+	by mx1.example.com with ESMTP id 9F8E7D; Mon, 05 Jan 2026 10:15:20 +0000
+Received: from [192.168.1.44] (helo=laptop.local)
+	by relay.example.org with esmtpsa (Exim 4.96) (envelope-from <alice@example.org>) id 1abCde-000123-Zx; Mon, 05 Jan 2026 10:15:05 +0000
+From: Alice Sender <alice@example.org>
+To: bob@example.com
+Subject: Received chain test
+Date: Mon, 05 Jan 2026 10:15:00 +0000
+Message-ID: <chain-001@example.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+
+Simulated message with a three-hop Received chain.

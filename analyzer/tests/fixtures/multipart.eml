@@ -1,0 +1,28 @@
+From: Alice Sender <alice@example.org>
+To: bob@example.com
+Subject: Multipart test
+Date: Mon, 05 Jan 2026 11:00:00 +0000
+Message-ID: <multi-001@example.org>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="outer"
+
+--outer
+Content-Type: multipart/alternative; boundary="inner"
+
+--inner
+Content-Type: text/plain; charset="utf-8"
+
+Plain part body.
+--inner
+Content-Type: text/html; charset="utf-8"
+
+<html><body><p>HTML part body.</p></body></html>
+--inner--
+
+--outer
+Content-Type: text/plain; name="note.txt"
+Content-Disposition: attachment; filename="note.txt"
+Content-Transfer-Encoding: base64
+
+aGVsbG8K
+--outer--   

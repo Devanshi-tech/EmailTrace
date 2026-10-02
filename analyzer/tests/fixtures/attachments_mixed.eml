@@ -1,0 +1,45 @@
+From: Alice Sender <alice@example.org>
+To: bob@example.com
+Subject: Attachment analysis test
+Date: Mon, 05 Jan 2026 12:00:00 +0000
+Message-ID: <att-001@example.org>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="mix"
+
+--mix
+Content-Type: text/plain; charset="utf-8"
+
+Simulated message with attachments.
+--mix
+Content-Type: application/pdf; name="report.pdf"
+Content-Disposition: attachment; filename="report.pdf"
+Content-Transfer-Encoding: base64
+
+JVBERi0xLjQKJSBzaW11bGF0ZWQgdGVzdCBmaWxlCg==
+--mix
+Content-Type: application/octet-stream; name="invoice.pdf.exe"
+Content-Disposition: attachment; filename="invoice.pdf.exe"
+Content-Transfer-Encoding: base64
+
+c2ltdWxhdGVkIHBsYWNlaG9sZGVyLCBub3QgYSBwcm9ncmFtCg==
+--mix
+Content-Type: application/vnd.ms-excel.sheet.macroEnabled.12; name="budget.xlsm"
+Content-Disposition: attachment; filename="budget.xlsm"
+Content-Transfer-Encoding: base64
+
+c2ltdWxhdGVkIHBsYWNlaG9sZGVyLCBub3QgYSBwcm9ncmFtCg==
+--mix
+Content-Type: application/zip; name="archive.zip"
+Content-Disposition: attachment; filename="archive.zip"
+Content-Transfer-Encoding: base64
+
+UEsDBBQAAAAAAIIoPl2u3PwAGQAAABkAAAAKAAAAcmVhZG1lLnR4dHNpbXVsYXRlZCBhcmNoaXZl
+IG1lbWJlcgpQSwECFAMUAAAAAACCKD5drtz8ABkAAAAZAAAACgAAAAAAAAAAAAAAgAEAAAAAcmVh
+ZG1lLnR4dFBLBQYAAAAAAQABADgAAABBAAAAAAA=
+--mix
+Content-Type: image/jpeg; name="photo.jpg"
+Content-Disposition: attachment; filename="photo.jpg"
+Content-Transfer-Encoding: base64
+
+JVBERi0xLjQKJSBzaW11bGF0ZWQgdGVzdCBmaWxlCg==
+--mix--

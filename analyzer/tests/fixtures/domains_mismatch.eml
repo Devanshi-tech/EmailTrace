@@ -1,0 +1,12 @@
+Return-Path: <bounce@mailer.example.net>
+From: "Support Team support@example.org" <alerts@example.com>
+To: bob@example.com
+Reply-To: helpdesk@gmail.com
+Subject: Domain comparison test
+Date: Mon, 05 Jan 2026 10:00:00 +0000
+Message-ID: <dom-001@example.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+
+Reset at https://reset.example.org/login and https://www.example.com/help
+or http://203.0.113.9/x for details.

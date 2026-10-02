@@ -1,0 +1,19 @@
+Received: from mail.example.com (mail.example.com [8.8.8.8])
+	by mx.example.net with ESMTP id P1; Mon, 05 Jan 2026 10:15:30 +0000
+Received: from localhost (localhost [127.0.0.1])
+	by mail.example.com with SMTP id P2; Mon, 05 Jan 2026 10:15:20 +0000
+Received: from [10.0.0.7] (helo=workstation)
+	by localhost with ESMTP id P3; Mon, 05 Jan 2026 10:15:10 +0000
+Received: from v6.example.org (v6.example.org [IPv6:2001:db8::25])
+	by [fe80::1] with ESMTP id P4; Mon, 05 Jan 2026 10:15:00 +0000
+X-Originating-IP: [8.8.4.4]
+X-Forwarded-For: 172.16.5.9, 999.1.1.1
+From: Alice Sender <alice@example.org>
+To: bob@example.com
+Subject: IP classification test
+Date: Mon, 05 Jan 2026 10:14:55 +0000
+Message-ID: <ip-mixed-001@example.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+
+Simulated message containing a mix of address types.

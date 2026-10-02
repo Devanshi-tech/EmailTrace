@@ -1,0 +1,13 @@
+Authentication-Results: mx.example.com;
+	spf=fail smtp.mailfrom=billing@examp1e-bank.example;
+	dkim=fail header.d=examp1e-bank.example;
+	dmarc=fail header.from=examp1e-bank.example
+From: Example Bank <billing@examp1e-bank.example>
+To: bob@example.com
+Subject: Simulated failing authentication
+Date: Mon, 05 Jan 2026 10:20:00 +0000
+Message-ID: <auth-fail-001@examp1e-bank.example>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+
+Simulated message with failing authentication.
